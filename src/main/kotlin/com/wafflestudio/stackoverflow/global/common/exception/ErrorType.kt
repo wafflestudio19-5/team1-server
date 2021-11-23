@@ -10,6 +10,7 @@ enum class ErrorType (
     DATA_NOT_FOUND(4000),
 
     CONFLICT(9000),
+    USER_ALREADY_EXISTS(9001),
 
     SERVER_ERROR(10000)
 }
