@@ -1,6 +1,6 @@
 package com.wafflestudio.stackoverflow.global.common.exception
 
-enum class ErrorType (
+enum class ErrorType(
     val code: Int
 ) {
     INVALID_REQUEST(0),
