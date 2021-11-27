@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class StackoverflowApplication
 
 fun main(args: Array<String>) {
-	runApplication<StackoverflowApplication>(*args)
+    runApplication<StackoverflowApplication>(*args)
 }
