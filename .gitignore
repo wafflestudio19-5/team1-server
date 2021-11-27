@@ -9,7 +9,7 @@ out/
 ## Gradle ##
 ## https://github.com/github/gitignore/blob/master/Gradle.gitignore
 
-.gradle
+.gradle/
 **/build/
 !src/**/build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -23,7 +23,7 @@ out/
 # Compiled class file
 *.class
 
-# Log file
+# Log fileW
 *.log
 
 # BlueJ files
