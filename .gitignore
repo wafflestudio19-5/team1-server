@@ -6,9 +6,17 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
-.gradle/
-build/
+## Gradle ##
+## https://github.com/github/gitignore/blob/master/Gradle.gitignore
+
+.gradle
+**/build/
+!src/**/build/
 !gradle/wrapper/gradle-wrapper.jar
+!gradle-wrapper.jar
+
+
+
 !**/src/main/**/build/
 !**/src/test/**/build/
 
