@@ -51,6 +51,15 @@ dependencies {
     implementation("io.springfox:springfox-swagger-ui:2.9.2")
 }
 
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    additionalEditorconfigFile.set(file(".editorconfig"))
+
+    filter {
+        exclude("./.gradle/**")
+        include("**/kotlin/**")
+    }
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
