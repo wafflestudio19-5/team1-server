@@ -1,1 +1,1 @@
-rootProject.name = "waffleoverflow"
+rootProject.name = "stackoverflow"
