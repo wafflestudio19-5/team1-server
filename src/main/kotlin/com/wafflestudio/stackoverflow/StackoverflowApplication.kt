@@ -9,4 +9,3 @@ class StackoverflowApplication
 fun main(args: Array<String>) {
     runApplication<StackoverflowApplication>(*args)
 }
-//
