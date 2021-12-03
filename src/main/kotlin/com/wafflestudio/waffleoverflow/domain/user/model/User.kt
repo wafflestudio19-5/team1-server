@@ -1,5 +1,6 @@
 package com.wafflestudio.waffleoverflow.domain.user.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.wafflestudio.waffleoverflow.domain.model.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -18,4 +19,7 @@ class User(
 
     @field:NotBlank
     var password: String,
+
+    @JsonIgnore
+    val authorites: String = "User"
 ) : BaseEntity()
