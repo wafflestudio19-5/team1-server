@@ -25,5 +25,8 @@ class UserDto {
 
         @field:NotBlank
         val password: String,
+
+        @field:NotBlank
+        val grantType: String,
     )
 }
