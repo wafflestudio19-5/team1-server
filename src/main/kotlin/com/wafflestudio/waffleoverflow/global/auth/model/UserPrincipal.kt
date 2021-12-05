@@ -15,7 +15,7 @@ class UserPrincipal(val user: User) : UserDetails {
     }
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
-        val authority: List<String> = user.authorites.split(",").filter { it.isNotEmpty() }
+        val authority: List<String> = user.authorities.split(",").filter { it.isNotEmpty() }
         return authority.map { author: String? -> SimpleGrantedAuthority(author) }
     }
 

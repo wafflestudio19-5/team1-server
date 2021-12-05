@@ -21,5 +21,5 @@ class User(
     var password: String,
 
     @JsonIgnore
-    val authorites: String = "User"
+    val authorities: String = "User"
 ) : BaseEntity()
