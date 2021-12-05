@@ -58,9 +58,9 @@ class JwtTokenProvider(private val userRepository: UserRepository) {
         val currentUser = userRepository.findByEmail(email)
             ?: throw UsernameNotFoundException("$email is not valid email, check token is expired")
         val userPrincipal = UserPrincipal(currentUser)
-        val authorises = userPrincipal.authorities
+        val authorities = userPrincipal.authorities
         // Make token with parsed data
-        return CustomAuthenticationToken(userPrincipal, null, authorises)
+        return CustomAuthenticationToken(userPrincipal, null, authorities)
     }
 
     fun validateToken(authToken: String?): Boolean {
