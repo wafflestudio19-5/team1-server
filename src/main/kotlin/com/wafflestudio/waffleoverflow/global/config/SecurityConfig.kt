@@ -56,8 +56,8 @@ class SecurityConfig(
             .addFilter(SigninAuthenticationFilter(authenticationManager(), jwtTokenProvider))
             .addFilter(JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider))
             .authorizeRequests()
-            .antMatchers("/api/v1/users/signin/").permitAll()
-            .antMatchers(HttpMethod.POST, "/api/v1/users/").anonymous()
+            .antMatchers("/api/user/signin/").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/user/").anonymous()
             .anyRequest().authenticated()
     }
 }
