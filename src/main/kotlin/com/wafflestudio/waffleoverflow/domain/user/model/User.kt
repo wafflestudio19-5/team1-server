@@ -15,7 +15,7 @@ class User(
     val email: String,
 
     @field:NotBlank
-    var name: String,
+    var username: String,
 
     @field:NotBlank
     var password: String,
