@@ -28,7 +28,7 @@ class UserService(
                 if (email == null || signupRequest.password == null) {
                     throw UserSignUpBadRequestException()
                 }
-                user = User(username, email, encodedPassword)
+                user = User(email, username, encodedPassword)
             }
             else -> {
                 throw BadGrantTypeException()
