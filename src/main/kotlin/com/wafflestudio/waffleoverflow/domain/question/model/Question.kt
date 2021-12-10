@@ -34,4 +34,7 @@ class Question(
 
     @Column(columnDefinition = "LONGTEXT")
     var bodyPath: String? = null,
+
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var questionTags: MutableList<QuestionTag> = mutableListOf(),
 ) : BaseTimeEntity()
