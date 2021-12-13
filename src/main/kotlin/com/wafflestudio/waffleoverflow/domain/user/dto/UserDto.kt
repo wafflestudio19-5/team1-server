@@ -7,12 +7,12 @@ class UserDto {
     data class Response(
         val id: Long,
         val email: String,
-        val name: String,
+        val username: String,
     ) {
         constructor(user: User) : this(
             id = user.id,
             email = user.email,
-            name = user.name,
+            username = user.username,
         )
     }
 
@@ -21,9 +21,12 @@ class UserDto {
         val email: String,
 
         @field:NotBlank
-        val name: String,
+        val username: String,
 
         @field:NotBlank
         val password: String,
+
+        @field:NotBlank
+        val grantType: String,
     )
 }

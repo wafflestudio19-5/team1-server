@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: local
+app:
+    jwt:
+        jwt-secret-key: waffleoverflow
+        jwt-expiration-in-ms: 86400000
 ---
 spring:
   config:
