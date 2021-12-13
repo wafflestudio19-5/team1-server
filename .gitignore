@@ -1,7 +1,30 @@
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+## Gradle ##
+## https://github.com/github/gitignore/blob/master/Gradle.gitignore
+
+.gradle/
+**/build/
+!src/**/build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle-wrapper.jar
+
+
+
+!**/src/main/**/build/
+!**/src/test/**/build/
+
 # Compiled class file
 *.class
 
-# Log file
+# Log fileW
 *.log
 
 # BlueJ files
@@ -11,7 +34,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -21,3 +43,24 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+
+HELP.md
+
+
+### properties ###
+#/src/main/resources/*.yml

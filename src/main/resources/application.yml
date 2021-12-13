@@ -1,0 +1,46 @@
+spring:
+  profiles:
+    active: local
+app:
+    jwt:
+        jwt-secret-key: waffleoverflow
+        jwt-expiration-in-ms: 86400000
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/stackoverflow?serverTimezone=UTC
+    username: toy-stackoverflow
+    password: stackoverflow
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+      # create: 시작 시 테이블 drop 후 재생성
+      # update: 시작 시 자동 migrate
+      # none: db 그대로
+      # create-drop: 시작 시 테이블 create, 종료 시 drop
+
+#---
+#spring:
+#  config:
+#    activate:
+#      on-profile: prod
+#  datasource:
+#    url:
+#    username:
+#    password:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  sql:
+#    init:
+#      mode: always
+#  jpa:
+#    generate-ddl: true
+#    hibernate:
+#      ddl-auto: none
