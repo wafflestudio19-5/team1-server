@@ -1,9 +1,19 @@
 # 🧇 WaffleOverFlow Server
+
+## Members
+|Leader|Member|Member|
+|:---:|:---:|:---:|
+|[문보현](https://github.com/moonpiderman)|[문용균](https://github.com/yg-moon)|[최하늘](https://github.com/caelum02)|
+
 ## Create Database
 
 ```shell
 bash /scripts/bash/init-db.sh
 ```
+
+## API Docs
+🔗 [Notion Link](https://eggplant-sumac-51e.notion.site/API-Docs-47105a4de54e4be6bf6027010afecf4d)
+
 
 ## Project Structure
 ```
