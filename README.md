@@ -46,5 +46,5 @@ bash /scripts/bash/init-db.sh
             └── application.yml
 ```
 
-## Databse Scheme
+## Database Scheme
 ![image](https://user-images.githubusercontent.com/70942197/145508752-4f98c975-a627-4840-9ae5-9ea84dba9115.png)
