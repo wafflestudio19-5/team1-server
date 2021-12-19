@@ -6,11 +6,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-        MYSQL_DATABASE: stackoverflow
-        MYSQL_USER: toy-stackoverflow
-        MYSQL_PASSWORD: wafflestudio
-        MYSQL_ROOT_PASSWORD: root
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: stackoverflow
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
     - uses: actions/checkout@v2
@@ -20,12 +24,6 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
-    - name: Set up MySQL
-      run: |
-        sudo systemctl start mysql.service
-        mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE}};' -uroot -proot
-        mysql -e 'CREATE USER `${{ env.MYSQL_USER}}`@localhost IDENTIFIED BY wafflestudio' -uroot -proot
-        mysql -e 'GRANT ALL PRIVILEGES ON ${{ env.MYSQL_DATABASE}}.* TO `${{ env.MYSQL_USER}}`@localhost';
     - name: Validate Gradle wrapper
       uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
     - name: Grant execute permission for gradlew
