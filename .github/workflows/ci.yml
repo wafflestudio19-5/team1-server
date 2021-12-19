@@ -9,7 +9,7 @@ jobs:
     env:
         MYSQL_DATABASE: stackoverflow
         MYSQL_USER: toy-stackoverflow
-        MYSQL_PASSWORD: root
+        MYSQL_PASSWORD: wafflestudio
         MYSQL_ROOT_PASSWORD: root
 
     steps:
@@ -22,8 +22,10 @@ jobs:
         cache: gradle
     - name: Set up MySQL
       run: |
-        sudo systemctl start mysql
+        sudo systemctl start mysql.service
         mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE}};' -uroot -proot
+        mysql -e 'CREATE USER ${{ env.MYSQL_USER}}@localhost IDENTIFIED BY wafflestudio' -uroot -proot
+        mysql -e 'GRANT ALL PRIVILEGES ON ${{ env.MYSQL_DATABASE}}.* TO ${{ env.MYSQL_USER}}@localhost';
     - name: Validate Gradle wrapper
       uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
     - name: Grant execute permission for gradlew
