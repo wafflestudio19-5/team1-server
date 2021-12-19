@@ -9,7 +9,7 @@ jobs:
     env:
         MYSQL_DATABASE: stackoverflow
         MYSQL_USER: toy-stackoverflow
-        MYSQL_PASSWORD: stackoverflow
+        MYSQL_PASSWORD: root
         MYSQL_ROOT_PASSWORD: root
 
     steps:
@@ -23,7 +23,7 @@ jobs:
     - name: Set up MySQL
       run: |
         sudo systemctl start mysql
-        mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE}};' -u${{ env.MYSQL_USER}} -p${{ env.MYSQL_PASSWORD}}
+        mysql -e 'CREATE DATABASE ${{ env.MYSQL_DATABASE}};' -uroot -proot
     - name: Validate Gradle wrapper
       uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
     - name: Grant execute permission for gradlew
