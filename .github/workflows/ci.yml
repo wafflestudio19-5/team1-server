@@ -27,7 +27,7 @@ jobs:
         distribution: 'adopt'
         cache: gradle
     - name: Setup MySQL
-      run: bash ./scripts/bash/init-db.sh
+      run: mysql -uroot -proot < ./scripts/sql/init-db.sql
     - name: Validate Gradle wrapper
       uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
     - name: Grant execute permission for gradlew
