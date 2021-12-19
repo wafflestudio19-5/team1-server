@@ -10,6 +10,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
+          MYSQL_USER: toy-stackoverflow
+          MYSQL_PASSWORD: stackoverflow
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: stackoverflow
         ports:
@@ -24,6 +26,10 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
+    - name: Setup MySQL
+      run: |
+        mysql -e 'CREATE DATABASE stackoverflow';
+        GRANT ALL PRIVILEGES ON stackoverflow.* TO 'toy-stackoverflow'@'localhost';
     - name: Validate Gradle wrapper
       uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
     - name: Grant execute permission for gradlew
