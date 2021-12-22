@@ -4,7 +4,7 @@ import com.wafflestudio.waffleoverflow.domain.comment.model.Comment
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 
 class CommentDto {
-    data class Wrapper(
+    data class Response(
         val id: Long,
         val user: UserDto.Response,
         val body: String,
