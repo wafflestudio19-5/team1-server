@@ -13,10 +13,9 @@ class QuestionDto {
         val user: UserDto.Response,
         val title: String,
         val body: String,
-        val upVote: Int,
-        val downVote: Int,
-        val comments: List<CommentDto.Wrapper>,
-        val tags: List<TagDto.Wrapper>,
+        val vote: Int,
+        val comments: List<CommentDto.Response>,
+        val tags: List<TagDto.Response>,
         val answers: List<AnswerDto.Response>
     ) {
         constructor(question: Question) : this(
@@ -24,10 +23,9 @@ class QuestionDto {
             UserDto.Response(question.user),
             question.title,
             question.bodyPath,
-            question.votes.count { it.status == VoteStatus.UP },
-            question.votes.count { it.status == VoteStatus.DOWN },
-            question.comments.map { CommentDto.Wrapper(it) },
-            question.questionTags.map { TagDto.Wrapper(it.tag) },
+            question.votes.count { it.status == VoteStatus.UP } - question.votes.count { it.status == VoteStatus.DOWN },
+            question.comments.map { CommentDto.Response(it) },
+            question.questionTags.map { TagDto.Response(it.tag) },
             question.answers.map { AnswerDto.Response(it) }
         )
     }
