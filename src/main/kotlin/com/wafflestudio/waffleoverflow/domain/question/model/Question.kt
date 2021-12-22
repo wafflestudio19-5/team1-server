@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank
 @Table(name = "question")
 class Question(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val user: User? = null,
+    val user: User,
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var answers: MutableList<Answer> = mutableListOf(),
@@ -30,10 +30,10 @@ class Question(
     var comments: MutableList<Comment> = mutableListOf(),
 
     @field:NotBlank
-    var title: String? = null,
+    var title: String,
 
     @Column(columnDefinition = "LONGTEXT")
-    var bodyPath: String? = null,
+    var bodyPath: String,
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var questionTags: MutableList<QuestionTag> = mutableListOf(),

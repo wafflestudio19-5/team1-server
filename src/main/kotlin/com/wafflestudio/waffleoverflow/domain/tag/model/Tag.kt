@@ -8,15 +8,17 @@ import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.OneToMany
 import javax.persistence.Table
+import javax.validation.constraints.NotBlank
 
 @Entity
 @Table(name = "tag")
 class Tag(
     @Column
-    val name: String? = null,
+    @NotBlank
+    val name: String,
 
     @Column
-    val intro: String? = null,
+    val intro: String,
 
     @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var tagQuestions: MutableList<QuestionTag> = mutableListOf(),
