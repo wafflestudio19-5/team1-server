@@ -3,7 +3,7 @@ package com.wafflestudio.waffleoverflow.domain.tag.dto
 import com.wafflestudio.waffleoverflow.domain.tag.model.Tag
 
 class TagDto {
-    data class Wrapper(
+    data class Response(
         val id: Long,
         val name: String,
         val intro: String,
