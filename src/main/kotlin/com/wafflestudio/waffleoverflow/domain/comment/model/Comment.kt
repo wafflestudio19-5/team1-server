@@ -9,12 +9,16 @@ import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.ManyToOne
 import javax.persistence.Table
+import javax.validation.constraints.NotBlank
 
 @Entity
 @Table(name = "comment")
 class Comment(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val user: User? = null,
+    val user: User,
+
+    @NotBlank
+    val body: String,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val question: Question? = null,
@@ -22,3 +26,4 @@ class Comment(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val answer: Answer? = null,
 ) : BaseTimeEntity()
+
