@@ -3,9 +3,7 @@ package com.wafflestudio.waffleoverflow.domain.comment.dto
 import com.wafflestudio.waffleoverflow.domain.comment.model.Comment
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 
-class CommentDto (
-
-    ){
+class CommentDto {
     data class Wrapper(
         val id: Long,
         val user: UserDto.Response,

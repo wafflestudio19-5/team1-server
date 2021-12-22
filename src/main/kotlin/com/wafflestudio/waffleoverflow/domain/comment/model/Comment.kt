@@ -26,4 +26,3 @@ class Comment(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val answer: Answer? = null,
 ) : BaseTimeEntity()
-
