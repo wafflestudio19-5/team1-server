@@ -4,12 +4,12 @@ import com.wafflestudio.waffleoverflow.domain.comment.dto.CommentDto
 import com.wafflestudio.waffleoverflow.domain.question.dto.QuestionDto
 import com.wafflestudio.waffleoverflow.domain.question.service.QuestionService
 import com.wafflestudio.waffleoverflow.domain.user.model.User
+import com.wafflestudio.waffleoverflow.domain.vote.dto.VoteDto
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -52,16 +52,12 @@ class QuestionController(
         )
     }
 
-    @PutMapping("/{question_id}/{comment_id}")
-    @ResponseStatus(HttpStatus.OK)
-    fun editComment(
+    @PostMapping("/{question_id}/vote/")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun addVote(
         @CurrentUser user: User,
         @PathVariable question_id: Long,
-        @PathVariable comment_id: Long,
-        @Valid @RequestBody requestBody: CommentDto.Request
-    ): CommentDto.Response {
-        return CommentDto.Response(
-            questionService.editComment(requestBody, user, question,)
-        )
+        @Valid @RequestBody requestBody: VoteDto.Request
+    ) {
     }
 }
