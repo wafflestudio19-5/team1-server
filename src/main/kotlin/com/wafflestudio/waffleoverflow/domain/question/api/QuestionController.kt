@@ -10,9 +10,11 @@ import com.wafflestudio.waffleoverflow.domain.vote.dto.VoteDto
 import com.wafflestudio.waffleoverflow.domain.vote.service.VoteService
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -26,7 +28,7 @@ class QuestionController(
     private val commentService: CommentService,
     private val voteService: VoteService
 ) {
-    @GetMapping("/{question_id}")
+    @GetMapping("/{question_id}/")
     @ResponseStatus(HttpStatus.OK)
     fun getQuestion(
         @PathVariable question_id: Long
@@ -34,6 +36,30 @@ class QuestionController(
         return QuestionDto.Response(
             questionService.findById(question_id)
         )
+    }
+
+    @PutMapping("/{question_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun editQuestion(
+        @CurrentUser user: User,
+        @Valid @RequestBody requestBody: QuestionDto.Request,
+        @PathVariable question_id: Long,
+    ): QuestionDto.Response {
+        val question = questionService.findById(question_id)
+        return QuestionDto.Response(
+            questionService.editQuestion(requestBody, user, question)
+        )
+    }
+
+    @DeleteMapping("/{question_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteQuestion(
+        @CurrentUser user: User,
+        @PathVariable question_id: Long
+    ): QuestionDto.Response {
+        val question = questionService.findById(question_id)
+        questionService.deleteQuestion(user, question)
+        return QuestionDto.Response(question)
     }
 
     @GetMapping("/{question_id}/comment/")

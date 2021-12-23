@@ -3,7 +3,9 @@ package com.wafflestudio.waffleoverflow.domain.question.service
 import com.wafflestudio.waffleoverflow.domain.answer.dto.AnswerDto
 import com.wafflestudio.waffleoverflow.domain.answer.model.Answer
 import com.wafflestudio.waffleoverflow.domain.answer.repository.AnswerRepository
+import com.wafflestudio.waffleoverflow.domain.question.dto.QuestionDto
 import com.wafflestudio.waffleoverflow.domain.question.exception.QuestionNotFoundException
+import com.wafflestudio.waffleoverflow.domain.question.exception.UnauthorizedQuestionEditException
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.question.repository.QuestionRepository
 import com.wafflestudio.waffleoverflow.domain.user.model.User
@@ -17,6 +19,30 @@ class QuestionService(
 ) {
     fun findById(id: Long): Question {
         return questionRepository.findByIdOrNull(id) ?: throw QuestionNotFoundException("Question $id does not exist")
+    }
+
+    fun editQuestion(
+        requestBody: QuestionDto.Request,
+        user: User,
+        question: Question
+    ): Question {
+        if (user.id != question.user.id)
+            throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
+
+        question.title = requestBody.title
+        question.body = requestBody.body
+
+        questionRepository.save(question)
+        return question
+    }
+
+    fun deleteQuestion(
+        user: User,
+        question: Question
+    ) {
+        if (user.id != question.user.id)
+            throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
+        questionRepository.delete(question)
     }
 
     fun addAnswer(

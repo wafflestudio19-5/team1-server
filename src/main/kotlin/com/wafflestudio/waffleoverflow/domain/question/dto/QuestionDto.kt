@@ -6,6 +6,7 @@ import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.tag.dto.TagDto
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.vote.model.VoteStatus
+import javax.validation.constraints.NotBlank
 
 class QuestionDto {
     data class Response(
@@ -29,4 +30,11 @@ class QuestionDto {
             question.answers.map { AnswerDto.Response(it) }
         )
     }
+
+    data class Request(
+        @NotBlank
+        val title: String,
+        @NotBlank
+        val body: String,
+    )
 }
