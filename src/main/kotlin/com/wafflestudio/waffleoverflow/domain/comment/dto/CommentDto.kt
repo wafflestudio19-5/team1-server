@@ -2,6 +2,7 @@ package com.wafflestudio.waffleoverflow.domain.comment.dto
 
 import com.wafflestudio.waffleoverflow.domain.comment.model.Comment
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
+import javax.validation.constraints.NotBlank
 
 class CommentDto {
     data class Response(
@@ -19,4 +20,9 @@ class CommentDto {
             comment.answer?.id
         )
     }
+
+    data class Request(
+        @NotBlank
+        val body: String
+    )
 }
