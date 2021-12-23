@@ -21,6 +21,20 @@ class QuestionService(
         return questionRepository.findByIdOrNull(id) ?: throw QuestionNotFoundException("Question $id does not exist")
     }
 
+    fun findAll(): List<Question> {
+        return questionRepository.findAll()
+    }
+
+    fun addQuestion(
+        requestBody: QuestionDto.Request,
+        user: User
+    ): Question {
+        val question = Question(user, title = requestBody.title, body = requestBody.body)
+        questionRepository.save(question)
+
+        return question
+    }
+
     fun validateUser(
         user: User,
         question: Question

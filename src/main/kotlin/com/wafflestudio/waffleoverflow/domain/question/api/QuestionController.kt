@@ -9,6 +9,7 @@ import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.dto.VoteDto
 import com.wafflestudio.waffleoverflow.domain.vote.service.VoteService
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
+import com.wafflestudio.waffleoverflow.global.common.dto.ListResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -28,6 +29,25 @@ class QuestionController(
     private val commentService: CommentService,
     private val voteService: VoteService
 ) {
+    @GetMapping("/")
+    @ResponseStatus(HttpStatus.OK)
+    fun getQuestions(): ListResponse<QuestionDto.Response> {
+        return ListResponse(
+            questionService.findAll().map { QuestionDto.Response(it) }
+        )
+    }
+
+    @PostMapping("/")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun addQuestion(
+        @Valid @RequestBody requestBody: QuestionDto.Request,
+        @CurrentUser user: User
+    ): QuestionDto.Response {
+        return QuestionDto.Response(
+            questionService.addQuestion(requestBody, user)
+        )
+    }
+
     @GetMapping("/{question_id}/")
     @ResponseStatus(HttpStatus.OK)
     fun getQuestion(
@@ -66,8 +86,10 @@ class QuestionController(
     @ResponseStatus(HttpStatus.OK)
     fun getComments(
         @PathVariable question_id: Long
-    ): List<CommentDto.Response> {
-        return questionService.findById(question_id).comments.map { CommentDto.Response(it) }
+    ): ListResponse<CommentDto.Response> {
+        return ListResponse(
+            questionService.findById(question_id).comments.map { CommentDto.Response(it) }
+        )
     }
 
     @PostMapping("/{question_id}/comment/")
