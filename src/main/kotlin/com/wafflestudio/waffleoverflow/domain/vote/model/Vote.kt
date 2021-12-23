@@ -15,13 +15,13 @@ import javax.persistence.Table
 @Table(name = "vote")
 class Vote(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val user: User? = null,
+    val user: User,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val question: Question? = null,
+    val question: Question?,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val answer: Answer? = null,
+    val answer: Answer?,
 
     // Isn't it constant value?
     @Column
