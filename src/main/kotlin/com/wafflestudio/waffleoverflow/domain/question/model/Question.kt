@@ -33,7 +33,7 @@ class Question(
     var title: String,
 
     @Column(columnDefinition = "LONGTEXT")
-    var bodyPath: String,
+    var body: String,
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var questionTags: MutableList<QuestionTag> = mutableListOf(),
