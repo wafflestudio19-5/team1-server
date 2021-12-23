@@ -17,10 +17,10 @@ import javax.persistence.Table
 @Table(name = "answer")
 class Answer(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val user: User? = null,
+    val user: User,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val question: Question? = null,
+    val question: Question,
 
     @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var votes: MutableList<Vote> = mutableListOf(),
@@ -29,7 +29,7 @@ class Answer(
     var comments: MutableList<Comment> = mutableListOf(),
 
     @Column(columnDefinition = "LONGTEXT")
-    var bodyPath: String? = null,
+    var bodyPath: String,
 
     @Column
     val accepted: Boolean
