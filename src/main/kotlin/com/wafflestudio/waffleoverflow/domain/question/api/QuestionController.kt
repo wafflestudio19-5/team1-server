@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -43,7 +44,24 @@ class QuestionController(
     fun addComment(
         @CurrentUser user: User,
         @PathVariable question_id: Long,
-        @Valid @RequestBody requestBody: QuestionDto.Request
+        @Valid @RequestBody requestBody: CommentDto.Request
     ): CommentDto.Response {
+        val question = questionService.findById(question_id)
+        return CommentDto.Response(
+            questionService.addComment(requestBody, user, question)
+        )
+    }
+
+    @PutMapping("/{question_id}/{comment_id}")
+    @ResponseStatus(HttpStatus.OK)
+    fun editComment(
+        @CurrentUser user: User,
+        @PathVariable question_id: Long,
+        @PathVariable comment_id: Long,
+        @Valid @RequestBody requestBody: CommentDto.Request
+    ): CommentDto.Response {
+        return CommentDto.Response(
+            questionService.editComment(requestBody, user, question,)
+        )
     }
 }
