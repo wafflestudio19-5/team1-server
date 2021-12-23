@@ -1,10 +1,13 @@
 package com.wafflestudio.waffleoverflow.domain.question.api
 
+import com.wafflestudio.waffleoverflow.domain.answer.dto.AnswerDto
 import com.wafflestudio.waffleoverflow.domain.comment.dto.CommentDto
+import com.wafflestudio.waffleoverflow.domain.comment.service.CommentService
 import com.wafflestudio.waffleoverflow.domain.question.dto.QuestionDto
 import com.wafflestudio.waffleoverflow.domain.question.service.QuestionService
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.dto.VoteDto
+import com.wafflestudio.waffleoverflow.domain.vote.service.VoteService
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,7 +22,9 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/question")
 class QuestionController(
-    private val questionService: QuestionService
+    private val questionService: QuestionService,
+    private val commentService: CommentService,
+    private val voteService: VoteService
 ) {
     @GetMapping("/{question_id}")
     @ResponseStatus(HttpStatus.OK)
@@ -48,8 +53,19 @@ class QuestionController(
     ): CommentDto.Response {
         val question = questionService.findById(question_id)
         return CommentDto.Response(
-            questionService.addComment(requestBody, user, question)
+            commentService.addQuestionComment(requestBody, user, question)
         )
+    }
+
+    @PostMapping("/{question_id}/answer/")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun addAnswer(
+        @CurrentUser user: User,
+        @PathVariable question_id: Long,
+        @Valid @RequestBody requestBody: AnswerDto.Request
+    ): AnswerDto.Response {
+        val question = questionService.findById(question_id)
+        return questionService.addAnswer(requestBody, user, question)
     }
 
     @PostMapping("/{question_id}/vote/")
@@ -58,6 +74,8 @@ class QuestionController(
         @CurrentUser user: User,
         @PathVariable question_id: Long,
         @Valid @RequestBody requestBody: VoteDto.Request
-    ) {
+    ): VoteDto.Response {
+        val question = questionService.findById(question_id)
+        return voteService.addQuestionVote(requestBody, user, question)
     }
 }
