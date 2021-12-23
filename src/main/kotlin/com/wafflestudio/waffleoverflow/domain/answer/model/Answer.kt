@@ -29,7 +29,7 @@ class Answer(
     var comments: MutableList<Comment> = mutableListOf(),
 
     @Column(columnDefinition = "LONGTEXT")
-    var bodyPath: String,
+    var body: String,
 
     @Column
     val accepted: Boolean

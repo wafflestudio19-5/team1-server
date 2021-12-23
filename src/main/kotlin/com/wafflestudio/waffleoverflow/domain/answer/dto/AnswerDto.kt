@@ -23,7 +23,7 @@ class AnswerDto {
         constructor(answer: Answer) : this(
             answer.id,
             UserDto.Response(answer.user),
-            answer.bodyPath,
+            answer.body,
             answer.votes.count { it.status == VoteStatus.UP } - answer.votes.count { it.status == VoteStatus.DOWN },
             answer.comments.map { CommentDto.Response(it) },
             answer.accepted
