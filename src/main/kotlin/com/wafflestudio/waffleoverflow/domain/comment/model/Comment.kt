@@ -18,7 +18,7 @@ class Comment(
     val user: User,
 
     @NotBlank
-    val body: String,
+    var body: String,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val question: Question? = null,
