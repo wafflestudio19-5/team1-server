@@ -7,4 +7,8 @@ class VoteDto {
         @Pattern(regexp = "(up|down)")
         val status: String
     )
+
+//    data class Response(
+//
+//    )
 }
