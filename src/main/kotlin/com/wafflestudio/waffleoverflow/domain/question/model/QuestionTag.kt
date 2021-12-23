@@ -12,8 +12,8 @@ import javax.persistence.Table
 @Table(name = "question_tags")
 class QuestionTag(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val question: Question? = null,
+    val question: Question,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val tag: Tag? = null,
+    val tag: Tag,
 ) : BaseEntity()
