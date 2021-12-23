@@ -22,7 +22,7 @@ class QuestionDto {
             question.id,
             UserDto.Response(question.user),
             question.title,
-            question.bodyPath,
+            question.body,
             question.votes.count { it.status == VoteStatus.UP } - question.votes.count { it.status == VoteStatus.DOWN },
             question.comments.map { CommentDto.Response(it) },
             question.questionTags.map { TagDto.Response(it.tag) },

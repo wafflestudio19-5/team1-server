@@ -24,7 +24,7 @@ class QuestionService(
         user: User,
         question: Question
     ): AnswerDto.Response {
-        val answer = Answer(user, question, bodyPath = requestBody.body, accepted = false)
+        val answer = Answer(user, question, body = requestBody.body, accepted = false)
         answerRepository.save(answer)
         return AnswerDto.Response(answer)
     }
