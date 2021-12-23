@@ -21,13 +21,20 @@ class QuestionService(
         return questionRepository.findByIdOrNull(id) ?: throw QuestionNotFoundException("Question $id does not exist")
     }
 
+    fun validateUser(
+        user: User,
+        question: Question
+    ) {
+        if (user.id != question.user.id)
+            throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
+    }
+
     fun editQuestion(
         requestBody: QuestionDto.Request,
         user: User,
         question: Question
     ): Question {
-        if (user.id != question.user.id)
-            throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
+        validateUser(user, question)
 
         question.title = requestBody.title
         question.body = requestBody.body
@@ -40,8 +47,7 @@ class QuestionService(
         user: User,
         question: Question
     ) {
-        if (user.id != question.user.id)
-            throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
+        validateUser(user, question)
         questionRepository.delete(question)
     }
 

@@ -83,6 +83,30 @@ class QuestionController(
         )
     }
 
+    @PutMapping("/comment/{comment_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun editComment(
+        @CurrentUser user: User,
+        @PathVariable comment_id: Long,
+        @Valid @RequestBody requestBody: CommentDto.Request,
+    ): CommentDto.Response {
+        val comment = commentService.findById(comment_id)
+        return CommentDto.Response(
+            commentService.editComment(requestBody, comment, user)
+        )
+    }
+
+    @DeleteMapping("/comment/{comment_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteComment(
+        @CurrentUser user: User,
+        @PathVariable comment_id: Long
+    ): CommentDto.Response {
+        val comment = commentService.findById(comment_id)
+        commentService.deleteComment(comment, user)
+        return CommentDto.Response(comment)
+    }
+
     @PostMapping("/{question_id}/answer/")
     @ResponseStatus(HttpStatus.CREATED)
     fun addAnswer(
