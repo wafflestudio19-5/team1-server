@@ -27,6 +27,6 @@ class UserDto {
         val password: String,
 
         @field:NotBlank
-        val grantType: String,
+        var grantType: String? = "PASSWORD",
     )
 }
