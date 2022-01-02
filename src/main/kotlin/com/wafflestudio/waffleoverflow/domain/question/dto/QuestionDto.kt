@@ -6,6 +6,7 @@ import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.tag.dto.TagDto
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.vote.model.VoteStatus
+import java.time.LocalDateTime
 import javax.validation.constraints.NotBlank
 
 class QuestionDto {
@@ -17,7 +18,9 @@ class QuestionDto {
         val vote: Int,
         val comments: List<CommentDto.Response>,
         val tags: List<TagDto.Response>,
-        val answers: List<AnswerDto.Response>
+        val answers: List<AnswerDto.Response>,
+        val createdAt: LocalDateTime,
+        val updatedAt: LocalDateTime
     ) {
         constructor(question: Question) : this(
             question.id,
@@ -27,7 +30,9 @@ class QuestionDto {
             question.votes.count { it.status == VoteStatus.UP } - question.votes.count { it.status == VoteStatus.DOWN },
             question.comments.map { CommentDto.Response(it) },
             question.questionTags.map { TagDto.Response(it.tag) },
-            question.answers.map { AnswerDto.Response(it) }
+            question.answers.map { AnswerDto.Response(it) },
+            question.createdAt!!,
+            question.updatedAt!!
         )
     }
 
