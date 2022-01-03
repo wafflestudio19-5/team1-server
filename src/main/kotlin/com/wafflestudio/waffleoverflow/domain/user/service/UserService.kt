@@ -38,7 +38,7 @@ class UserService(
         return userRepository.save(user)
     }
 
-    fun myInfo(user: User): User {
+    fun loadUserInfo(user: User): User {
         return userRepository.findByEmail(user.email) ?: throw CouldNotFoundUser()
     }
 }

@@ -35,10 +35,10 @@ class UserController(
 
     @GetMapping("/me/")
     @ResponseStatus(HttpStatus.OK)
-    fun myInfo(
+    fun loadUser(
         @CurrentUser user: User,
     ): UserDto.Response {
-        val thisUser = userService.myInfo(user)
+        val thisUser = userService.loadUserInfo(user)
         return UserDto.Response(thisUser)
     }
 }
