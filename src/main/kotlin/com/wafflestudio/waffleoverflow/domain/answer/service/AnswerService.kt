@@ -32,4 +32,9 @@ class AnswerService(
         answer.body = requestBody.body
         return answer
     }
+
+    fun deleteAnswer(user: User, answer: Answer) {
+        validateUser(user, answer)
+        answerRepository.delete(answer)
+    }
 }

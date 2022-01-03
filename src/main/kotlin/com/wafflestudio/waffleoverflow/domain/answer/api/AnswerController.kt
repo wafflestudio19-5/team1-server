@@ -7,6 +7,7 @@ import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.service.VoteService
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -33,5 +34,16 @@ class AnswerController(
         return AnswerDto.Response(
             answerService.editAnswer(requestBody, user, answer)
         )
+    }
+
+    @DeleteMapping("/{answer_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteAnswer(
+        @CurrentUser user: User,
+        @PathVariable answer_id: Long
+    ): AnswerDto.Response {
+        val answer = answerService.findById(answer_id)
+        answerService.deleteAnswer(user, answer)
+        return AnswerDto.Response(answer)
     }
 }
