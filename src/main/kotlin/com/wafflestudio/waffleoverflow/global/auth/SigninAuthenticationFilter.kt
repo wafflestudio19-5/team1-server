@@ -29,7 +29,7 @@ class SigninAuthenticationFilter(
         authResult: Authentication,
     ) {
         response.addHeader("Authentication", jwtTokenProvider.generateToken(authResult))
-        response.status = HttpServletResponse.SC_NO_CONTENT
+        response.status = HttpServletResponse.SC_OK
     }
 
     override fun unsuccessfulAuthentication(
