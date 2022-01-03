@@ -10,15 +10,15 @@ class UserDto {
         val id: Long,
         val email: String,
         val username: String,
-        val questions: List<QuestionDto.Response>,
-        val answers: List<AnswerDto.Response>
+        val questions: List<QuestionDto.ResponseSummary>,
+        val answers: List<AnswerDto.ResponseSummary>
     ) {
         constructor(user: User) : this(
             id = user.id,
             email = user.email,
             username = user.username,
-            questions = user.questions.map { QuestionDto.Response(it) },
-            answers = user.answers.map { AnswerDto.Response(it) }
+            questions = user.questions.map { QuestionDto.ResponseSummary(it) },
+            answers = user.answers.map { AnswerDto.ResponseSummary(it) }
         )
     }
 
