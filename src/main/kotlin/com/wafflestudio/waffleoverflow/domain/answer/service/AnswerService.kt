@@ -27,13 +27,20 @@ class AnswerService(
             throw UnauthorizedUserException("User $user.id is not the author of answer $answer.id")
     }
 
-    fun editAnswer(requestBody: AnswerDto.Request, user: User, answer: Answer): Answer {
+    fun editAnswer(
+        requestBody: AnswerDto.Request,
+        user: User,
+        answer: Answer
+    ): Answer {
         validateUser(user, answer)
         answer.body = requestBody.body
         return answer
     }
 
-    fun deleteAnswer(user: User, answer: Answer) {
+    fun deleteAnswer(
+        user: User,
+        answer: Answer
+    ) {
         validateUser(user, answer)
         answerRepository.delete(answer)
     }
