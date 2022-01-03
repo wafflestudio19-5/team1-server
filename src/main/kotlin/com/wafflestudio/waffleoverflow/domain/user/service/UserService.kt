@@ -2,6 +2,7 @@ package com.wafflestudio.waffleoverflow.domain.user.service
 
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.exception.BadGrantTypeException
+import com.wafflestudio.waffleoverflow.domain.user.exception.CouldNotFoundUser
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserSignUpBadRequestException
 import com.wafflestudio.waffleoverflow.domain.user.model.User
@@ -35,5 +36,9 @@ class UserService(
             }
         }
         return userRepository.save(user)
+    }
+
+    fun myInfo(user: User): User {
+        return userRepository.findByEmail(user.email) ?: throw CouldNotFoundUser()
     }
 }
