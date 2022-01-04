@@ -34,4 +34,14 @@ class AnswerDto {
             answer.updatedAt!!
         )
     }
+
+    data class ResponseSummary(
+        val id: Long,
+        val questionTitle: String,
+    ) {
+        constructor(answer: Answer) : this(
+            id = answer.id,
+            questionTitle = answer.question.title,
+        )
+    }
 }

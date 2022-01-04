@@ -42,4 +42,14 @@ class QuestionDto {
         @NotBlank
         val body: String,
     )
+
+    data class ResponseSummary(
+        val id: Long,
+        val title: String,
+    ) {
+        constructor(question: Question) : this(
+            id = question.id,
+            title = question.title,
+        )
+    }
 }
