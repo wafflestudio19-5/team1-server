@@ -78,6 +78,7 @@ class SecurityConfig(
             .antMatchers("/api/user/signin/").permitAll()
             .antMatchers(HttpMethod.POST, "/api/user/signup/").anonymous()
             .antMatchers(HttpMethod.GET, "/api/v1/pingpong/").anonymous()
+            .antMatchers(HttpMethod.GET, "/api/question/**").permitAll()
             .anyRequest().authenticated()
     }
 
