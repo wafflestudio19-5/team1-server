@@ -19,14 +19,6 @@ class AnswerService(
         return answerRepository.findByIdOrNull(id) ?: throw AnswerNotFoundException("Answer $id does not exist")
     }
 
-    fun validateUser(
-        user: User,
-        answer: Answer
-    ) {
-        if (user.id != answer.user.id)
-            throw UnauthorizedUserException("User $user.id is not the author of answer $answer.id")
-    }
-
     fun editAnswer(
         requestBody: AnswerDto.Request,
         user: User,
@@ -43,5 +35,13 @@ class AnswerService(
     ) {
         validateUser(user, answer)
         answerRepository.delete(answer)
+    }
+
+    private fun validateUser(
+        user: User,
+        answer: Answer
+    ) {
+        if (user.id != answer.user.id)
+            throw UnauthorizedUserException("User $user.id is not the author of answer $answer.id")
     }
 }
