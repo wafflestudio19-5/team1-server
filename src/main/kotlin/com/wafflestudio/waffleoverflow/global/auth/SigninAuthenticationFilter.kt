@@ -32,7 +32,7 @@ class SigninAuthenticationFilter(
         response.contentType = "application/json"
         response.characterEncoding = "utf-8"
         response.addHeader("Authentication", token)
-        response.writer.write("{\"accessToken\" : " + token + "}")
+        response.writer.write("{\"accessToken\" : " + "\"" + token + "\"" + "}")
         response.status = HttpServletResponse.SC_OK
     }
 
