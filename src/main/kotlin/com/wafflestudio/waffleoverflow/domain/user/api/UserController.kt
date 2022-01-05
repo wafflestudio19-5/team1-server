@@ -4,7 +4,6 @@ import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.user.service.UserService
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
-import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
