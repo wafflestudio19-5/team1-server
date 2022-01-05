@@ -4,7 +4,6 @@ import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.user.service.UserService
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
-import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,7 +19,6 @@ import javax.validation.Valid
 @RequestMapping("/api/user")
 class UserController(
     private val userService: UserService,
-    private val jwtTokenProvider: JwtTokenProvider,
 ) {
     @PostMapping("/signup/")
     @ResponseStatus(HttpStatus.OK)
@@ -29,7 +27,7 @@ class UserController(
         response: HttpServletResponse
     ): UserDto.Response {
         val user = userService.signup(signupRequest)
-        response.addHeader("Authentication", jwtTokenProvider.generateToken(user.email))
+        response.addHeader("Authentication", user.accessToken)
         return UserDto.Response(user)
     }
 

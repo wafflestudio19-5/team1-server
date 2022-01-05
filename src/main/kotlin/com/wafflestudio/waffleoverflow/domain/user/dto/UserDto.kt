@@ -10,6 +10,7 @@ class UserDto {
         val id: Long,
         val email: String,
         val username: String,
+        val accessToken: String,
         val questions: List<QuestionDto.ResponseSummary>,
         val answers: List<AnswerDto.ResponseSummary>
     ) {
@@ -17,6 +18,7 @@ class UserDto {
             id = user.id,
             email = user.email,
             username = user.username,
+            accessToken = user.accessToken,
             questions = user.questions.map { QuestionDto.ResponseSummary(it) },
             answers = user.answers.map { AnswerDto.ResponseSummary(it) }
         )
