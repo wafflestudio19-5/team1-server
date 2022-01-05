@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank
 @Entity
 @Table(name = "question")
 class Question(
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
     val user: User,
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
