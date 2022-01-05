@@ -22,6 +22,16 @@ class UserDto {
         )
     }
 
+    data class ResponseSummary(
+        val id: Long,
+        val username: String
+    ) {
+        constructor(user: User) : this(
+            id = user.id,
+            username = user.username
+        )
+    }
+
     data class SignupRequest(
         @field:NotBlank
         val email: String,

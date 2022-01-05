@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank
 class QuestionDto {
     data class Response(
         val id: Long,
-        val user: UserDto.Response,
+        val user: UserDto.ResponseSummary,
         val title: String,
         val body: String,
         val vote: Int,
@@ -24,7 +24,7 @@ class QuestionDto {
     ) {
         constructor(question: Question) : this(
             question.id,
-            UserDto.Response(question.user),
+            UserDto.ResponseSummary(question.user),
             question.title,
             question.body,
             question.votes.count { it.status == VoteStatus.UP } - question.votes.count { it.status == VoteStatus.DOWN },
