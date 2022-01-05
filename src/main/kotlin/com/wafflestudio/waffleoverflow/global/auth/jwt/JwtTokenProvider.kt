@@ -30,7 +30,10 @@ class JwtTokenProvider(private val userRepository: UserRepository) {
 
     fun generateToken(authentication: Authentication): String {
         val userPrincipal = authentication.principal as UserPrincipal
-        return generateToken(userPrincipal.user.email)
+        val token = generateToken(userPrincipal.user.email)
+        userPrincipal.user.accessToken = token
+        userRepository.save(userPrincipal.user)
+        return userPrincipal.user.accessToken
     }
 
     fun generateToken(email: String): String {
