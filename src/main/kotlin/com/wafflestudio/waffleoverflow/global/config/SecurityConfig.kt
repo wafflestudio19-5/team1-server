@@ -47,7 +47,8 @@ class SecurityConfig(
     fun corsConfigurationSource(): CorsConfigurationSource {
         val corsConfiguration = CorsConfiguration()
 
-        corsConfiguration.addAllowedOrigin("https://www.waffleoverflow.shop, http://localhost:3000")
+        corsConfiguration.addAllowedOrigin("https://www.waffleoverflow.shop")
+        corsConfiguration.addAllowedOrigin("http://localhost:3000")
         corsConfiguration.addAllowedHeader("*")
         corsConfiguration.addAllowedMethod("*")
         corsConfiguration.allowCredentials = true
