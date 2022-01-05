@@ -7,6 +7,7 @@ import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsEx
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserSignUpBadRequestException
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.user.repository.UserRepository
+import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
         if (userRepository.existsUserByUsername(signupRequest.username)) throw UserAlreadyExistsException()
@@ -22,6 +24,7 @@ class UserService(
         val username = signupRequest.username
         val encodedPassword = passwordEncoder.encode(signupRequest.password)
         val grantType = signupRequest.grantType
+        val accessToken = jwtTokenProvider.generateToken(email)
 
         when (grantType) {
             // Oauth 영역 추가 예정
@@ -29,7 +32,7 @@ class UserService(
                 if (email == null || signupRequest.password == null) {
                     throw UserSignUpBadRequestException()
                 }
-                user = User(email, username, encodedPassword)
+                user = User(email, username, encodedPassword, accessToken = accessToken)
             }
             else -> {
                 throw BadGrantTypeException()

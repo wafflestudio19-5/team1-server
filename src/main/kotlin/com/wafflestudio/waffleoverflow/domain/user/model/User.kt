@@ -30,6 +30,9 @@ class User(
     @JsonIgnore
     val authorities: String = "User",
 
+    @field:NotBlank
+    var accessToken: String,
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
     var questions: MutableList<Question> = mutableListOf(),
 
