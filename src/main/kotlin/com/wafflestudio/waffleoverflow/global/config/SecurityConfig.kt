@@ -49,7 +49,7 @@ class SecurityConfig(
 
         corsConfiguration.addAllowedOrigin("https://www.waffleoverflow.shop")
         corsConfiguration.addAllowedOrigin("http://localhost:3000")
-        corsConfiguration.addAllowedHeader("Authentication")
+        corsConfiguration.addAllowedHeader("*")
         corsConfiguration.addAllowedMethod("*")
         corsConfiguration.allowCredentials = true
 
