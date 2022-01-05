@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank
 class CommentDto {
     data class Response(
         val id: Long,
-        val user: UserDto.Response,
+        val user: UserDto.ResponseSummary,
         val body: String,
         val questionId: Long?,
         val answerId: Long?,
@@ -17,7 +17,7 @@ class CommentDto {
     ) {
         constructor(comment: Comment) : this(
             comment.id,
-            UserDto.Response(comment.user),
+            UserDto.ResponseSummary(comment.user),
             comment.body,
             comment.question?.id,
             comment.answer?.id,
