@@ -82,6 +82,7 @@ class SecurityConfig(
             .antMatchers(HttpMethod.GET, "/api/question/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/answer/**").permitAll()
             .anyRequest().authenticated()
+            .and().logout()
     }
 
     override fun configure(web: WebSecurity) {
