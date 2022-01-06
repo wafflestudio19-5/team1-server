@@ -77,7 +77,7 @@ class QuestionService(
         return QuestionDto.Response(question)
     }
 
-    fun validateUser(
+    private fun validateUser(
         user: User,
         question: Question
     ) {
