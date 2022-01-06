@@ -1,6 +1,7 @@
 package com.wafflestudio.waffleoverflow.domain.question.api
 
 import com.wafflestudio.waffleoverflow.domain.answer.dto.AnswerDto
+import com.wafflestudio.waffleoverflow.domain.answer.service.AnswerService
 import com.wafflestudio.waffleoverflow.domain.comment.dto.CommentDto
 import com.wafflestudio.waffleoverflow.domain.comment.service.CommentService
 import com.wafflestudio.waffleoverflow.domain.question.dto.QuestionDto
@@ -26,6 +27,7 @@ import javax.validation.Valid
 @RequestMapping("/api/question")
 class QuestionController(
     private val questionService: QuestionService,
+    private val answerService: AnswerService,
     private val commentService: CommentService,
     private val voteService: VoteService
 ) {
@@ -149,5 +151,17 @@ class QuestionController(
     ): VoteDto.Response {
         val question = questionService.findById(question_id)
         return voteService.addQuestionVote(requestBody, user, question)
+    }
+
+    @PostMapping("/{question_id}/{answer_id}/accept/")
+    @ResponseStatus(HttpStatus.OK)
+    fun acceptAnswer(
+        @CurrentUser user: User,
+        @PathVariable question_id: Long,
+        @PathVariable answer_id: Long,
+    ): QuestionDto.Response {
+        val question = questionService.findById(question_id)
+        val answer = answerService.findById((answer_id))
+        return questionService.acceptAnswer(user, question, answer)
     }
 }
