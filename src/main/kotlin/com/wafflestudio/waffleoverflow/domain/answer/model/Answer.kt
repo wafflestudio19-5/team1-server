@@ -31,5 +31,5 @@ class Answer(
     var body: String,
 
     @Column
-    var accepted: Boolean
+    var accepted: Boolean = false
 ) : BaseTimeEntity()
