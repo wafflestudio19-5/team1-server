@@ -5,6 +5,7 @@ import com.wafflestudio.waffleoverflow.domain.model.BaseTimeEntity
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -21,10 +22,10 @@ class Answer(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [])
     val question: Question,
 
-    @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [])
+    @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var votes: MutableList<Vote> = mutableListOf(),
 
-    @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [])
+    @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var comments: MutableList<Comment> = mutableListOf(),
 
     @Column(columnDefinition = "LONGTEXT")
