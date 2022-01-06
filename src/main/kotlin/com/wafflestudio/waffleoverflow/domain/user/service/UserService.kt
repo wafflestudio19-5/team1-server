@@ -19,6 +19,7 @@ class UserService(
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
         if (userRepository.existsUserByUsername(signupRequest.username)) throw UserAlreadyExistsException()
+        if (userRepository.existsUserByEmail(signupRequest.email)) throw UserAlreadyExistsException()
         val user: User?
         val email = signupRequest.email
         val username = signupRequest.username
