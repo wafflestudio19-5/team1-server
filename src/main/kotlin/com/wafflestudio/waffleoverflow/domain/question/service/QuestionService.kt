@@ -11,8 +11,10 @@ import com.wafflestudio.waffleoverflow.domain.question.repository.QuestionReposi
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class QuestionService(
     private val questionRepository: QuestionRepository,
     private val answerRepository: AnswerRepository,
@@ -33,14 +35,6 @@ class QuestionService(
         questionRepository.save(question)
 
         return question
-    }
-
-    fun validateUser(
-        user: User,
-        question: Question
-    ) {
-        if (user.id != question.user.id)
-            throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
     }
 
     fun editQuestion(
@@ -73,5 +67,23 @@ class QuestionService(
         val answer = Answer(user, question, body = requestBody.body, accepted = false)
         answerRepository.save(answer)
         return AnswerDto.Response(answer)
+    }
+
+    fun acceptAnswer(
+        user: User,
+        question: Question,
+        answer: Answer
+    ): QuestionDto.Response {
+        validateUser(user, question)
+        answer.accepted = true
+        return QuestionDto.Response(question)
+    }
+
+    private fun validateUser(
+        user: User,
+        question: Question
+    ) {
+        if (user.id != question.user.id)
+            throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
     }
 }
