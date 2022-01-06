@@ -11,8 +11,10 @@ import com.wafflestudio.waffleoverflow.domain.question.repository.QuestionReposi
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class QuestionService(
     private val questionRepository: QuestionRepository,
     private val answerRepository: AnswerRepository,
