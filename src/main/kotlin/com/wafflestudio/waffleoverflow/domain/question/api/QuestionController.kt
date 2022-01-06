@@ -5,12 +5,16 @@ import com.wafflestudio.waffleoverflow.domain.answer.service.AnswerService
 import com.wafflestudio.waffleoverflow.domain.comment.dto.CommentDto
 import com.wafflestudio.waffleoverflow.domain.comment.service.CommentService
 import com.wafflestudio.waffleoverflow.domain.question.dto.QuestionDto
+import com.wafflestudio.waffleoverflow.domain.question.repository.QuestionRepository
 import com.wafflestudio.waffleoverflow.domain.question.service.QuestionService
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.dto.VoteDto
 import com.wafflestudio.waffleoverflow.domain.vote.service.VoteService
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
 import com.wafflestudio.waffleoverflow.global.common.dto.ListResponse
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,16 +31,18 @@ import javax.validation.Valid
 @RequestMapping("/api/question")
 class QuestionController(
     private val questionService: QuestionService,
+    private val questionRepository: QuestionRepository,
     private val answerService: AnswerService,
     private val commentService: CommentService,
     private val voteService: VoteService
 ) {
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    fun getQuestions(): ListResponse<QuestionDto.Response> {
-        return ListResponse(
-            questionService.findAll().map { QuestionDto.Response(it) }
-        )
+    fun getQuestions(
+        @PageableDefault(size = 15)
+        pageable: Pageable
+    ): Page<QuestionDto.Response> {
+        return questionRepository.findAll(pageable).map { QuestionDto.Response(it) }
     }
 
     @PostMapping("/")
