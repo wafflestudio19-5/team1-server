@@ -35,14 +35,6 @@ class QuestionService(
         return question
     }
 
-    fun validateUser(
-        user: User,
-        question: Question
-    ) {
-        if (user.id != question.user.id)
-            throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
-    }
-
     fun editQuestion(
         requestBody: QuestionDto.Request,
         user: User,
@@ -73,5 +65,23 @@ class QuestionService(
         val answer = Answer(user, question, body = requestBody.body, accepted = false)
         answerRepository.save(answer)
         return AnswerDto.Response(answer)
+    }
+
+    fun acceptAnswer(
+        user: User,
+        question: Question,
+        answer: Answer
+    ): QuestionDto.Response {
+        validateUser(user, question)
+        answer.accepted = true
+        return QuestionDto.Response(question)
+    }
+
+    fun validateUser(
+        user: User,
+        question: Question
+    ) {
+        if (user.id != question.user.id)
+            throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
     }
 }
