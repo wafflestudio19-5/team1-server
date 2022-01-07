@@ -156,7 +156,7 @@ class QuestionController(
         @Valid @RequestBody requestBody: VoteDto.Request
     ): VoteDto.Response {
         val question = questionService.findById(question_id)
-        return voteService.addQuestionVote(requestBody, user, question)
+        return voteService.changeQuestionVote(requestBody, user, question)
     }
 
     @PostMapping("/{question_id}/{answer_id}/accept/")

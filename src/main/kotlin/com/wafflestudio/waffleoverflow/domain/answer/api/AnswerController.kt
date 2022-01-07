@@ -107,6 +107,6 @@ class AnswerController(
         @Valid @RequestBody requestBody: VoteDto.Request
     ): VoteDto.Response {
         val answer = answerService.findById(answer_id)
-        return voteService.addAnswerVote(requestBody, user, answer)
+        return voteService.changeAnswerVote(requestBody, user, answer)
     }
 }

@@ -22,7 +22,6 @@ class Vote(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [])
     val answer: Answer?,
 
-    // Isn't it constant value?
     @Column
     var status: VoteStatus,
 ) : BaseTimeEntity()
