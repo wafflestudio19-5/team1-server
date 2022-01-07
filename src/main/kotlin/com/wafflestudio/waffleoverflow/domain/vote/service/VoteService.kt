@@ -109,7 +109,7 @@ class VoteService(
         question: Question?,
         answer: Answer?,
     ): VoteDto.Response {
-        val status = when (requestBody.status) {
+        var status = when (requestBody.status) {
             "Up" -> VoteStatus.UP
             "Down" -> VoteStatus.DOWN
             else -> VoteStatus.NONE
@@ -121,6 +121,7 @@ class VoteService(
             val vote = question.votes.find { it.user.id == user.id }
             val voteId = vote!!.id
             realVote = voteRepository.findById(voteId)
+            status = neutralVote(vote, status)
             realVote.get().status = status
         }
 
@@ -128,9 +129,23 @@ class VoteService(
             val vote = answer.votes.find { it.user.id == user.id }
             val voteId = vote!!.id
             realVote = voteRepository.findById(voteId)
+            status = neutralVote(vote, status)
             realVote.get().status = status
         }
 
         return VoteDto.Response(realVote.get())
+    }
+
+    private fun neutralVote(
+        vote: Vote,
+        status: VoteStatus
+    ): VoteStatus {
+        var realStatus = status
+        if ((vote.status == VoteStatus.UP && status == VoteStatus.DOWN) ||
+            (vote.status == VoteStatus.DOWN && status == VoteStatus.UP)
+        ) {
+            realStatus = VoteStatus.NONE
+        }
+        return realStatus
     }
 }
