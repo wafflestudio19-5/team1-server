@@ -49,13 +49,13 @@ class VoteService(
         answer: Answer?
     ): Boolean {
         if (question != null) {
-            val question = questionService.findById(question.id)
-            return question.votes.any { it.user.id == user.id }
+            val foundQuestion = questionService.findById(question.id)
+            return foundQuestion.votes.any { it.user.id == user.id }
         }
 
         if (answer != null) {
-            val answer = answerService.findById(answer.id)
-            return answer.votes.any { it.user.id == user.id }
+            val foundAnswer = answerService.findById(answer.id)
+            return foundAnswer.votes.any { it.user.id == user.id }
         }
 
         return false
@@ -115,22 +115,22 @@ class VoteService(
             else -> VoteStatus.NONE
         }
 
-        var realVote = Vote(user, null, null, status)
+        var realVote = voteRepository.findById(0)
 
         if (question != null) {
             val vote = question.votes.find { it.user.id == user.id }
             val voteId = vote!!.id
-            var realVote = voteRepository.findById(voteId)
+            realVote = voteRepository.findById(voteId)
             realVote.get().status = status
         }
 
         if (answer != null) {
             val vote = answer.votes.find { it.user.id == user.id }
             val voteId = vote!!.id
-            var realVote = voteRepository.findById(voteId)
+            realVote = voteRepository.findById(voteId)
             realVote.get().status = status
         }
 
-        return VoteDto.Response(realVote)
+        return VoteDto.Response(realVote.get())
     }
 }
