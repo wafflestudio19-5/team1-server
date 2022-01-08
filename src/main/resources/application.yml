@@ -27,6 +27,14 @@ spring:
       # none: db 그대로
       # create-drop: 시작 시 테이블 create, 종료 시 drop
 
+aws:
+    access-key: AKIAWHWVMYO5N6YRUJIT
+    secret-key: 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
+    s3:
+        endpoint: https://images.waffleoverflow.shop
+        bucket: waffleoverflow-image
+        dir: static
+
 #---
 #spring:
 #  config:
