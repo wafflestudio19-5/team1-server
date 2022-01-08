@@ -33,6 +33,8 @@ class User(
     @field:NotBlank
     var accessToken: String,
 
+    var s3Path: String? = null,
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
     var questions: MutableList<Question> = mutableListOf(),
 

@@ -11,6 +11,7 @@ class UserDto {
         val email: String,
         val username: String,
         val accessToken: String,
+        val image: String?,
         val questions: List<QuestionDto.ResponseSummary>,
         val answers: List<AnswerDto.ResponseSummary>
     ) {
@@ -19,6 +20,7 @@ class UserDto {
             email = user.email,
             username = user.username,
             accessToken = user.accessToken,
+            image = user.s3Path,
             questions = user.questions.map { QuestionDto.ResponseSummary(it) },
             answers = user.answers.map { AnswerDto.ResponseSummary(it) }
         )
