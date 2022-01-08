@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
@@ -51,6 +53,16 @@ class UserController(
         @CurrentUser user: User,
     ): UserDto.Response {
         val thisUser = userService.loadUserInfo(user)
+        return UserDto.Response(thisUser)
+    }
+
+    @PostMapping("/me/image/")
+    @ResponseStatus(HttpStatus.OK)
+    fun editProfileImage(
+        @CurrentUser user: User,
+        @RequestParam("image") multipartFile: MultipartFile
+    ): UserDto.Response {
+        val thisUser = userService.editProfileImage(user, multipartFile)
         return UserDto.Response(thisUser)
     }
 }

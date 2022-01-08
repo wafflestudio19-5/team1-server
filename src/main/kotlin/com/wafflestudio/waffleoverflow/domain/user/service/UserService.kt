@@ -7,15 +7,18 @@ import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsEx
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserSignUpBadRequestException
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.user.repository.UserRepository
+import com.wafflestudio.waffleoverflow.domain.user.util.S3Utils
 import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtTokenProvider: JwtTokenProvider,
+    private val s3Utils: S3Utils
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
         if (userRepository.existsUserByUsername(signupRequest.username)) throw UserAlreadyExistsException()
@@ -44,5 +47,17 @@ class UserService(
 
     fun loadUserInfo(user: User): User {
         return userRepository.findByEmail(user.email) ?: throw CouldNotFoundUser()
+    }
+
+    fun editProfileImage(
+        user: User,
+        multipartFile: MultipartFile
+    ): User {
+        val urlPath = s3Utils.upload(multipartFile)
+
+        user.s3Path = urlPath
+        userRepository.save(user)
+
+        return user
     }
 }
