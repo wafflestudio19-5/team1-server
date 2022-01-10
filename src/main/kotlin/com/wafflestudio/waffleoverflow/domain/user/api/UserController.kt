@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -54,6 +55,16 @@ class UserController(
     ): UserDto.Response {
         val thisUser = userService.loadUserInfo(user)
         return UserDto.Response(thisUser)
+    }
+
+    @GetMapping("/{user_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun findUserById(
+        @PathVariable user_id: Long
+    ): UserDto.Response {
+        return UserDto.Response(
+            userService.findUserById(user_id)
+        )
     }
 
     @PostMapping("/me/image/")
