@@ -24,8 +24,9 @@ class User(
     @field:NotBlank
     var username: String,
 
-    @field:NotBlank
-    var password: String,
+    // @field:NotBlank
+    @Column
+    var password: String? = null,
 
     @JsonIgnore
     val authorities: String = "User",

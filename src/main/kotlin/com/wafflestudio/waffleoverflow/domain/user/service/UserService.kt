@@ -33,7 +33,7 @@ class UserService(
         when (grantType) {
             // Oauth 영역 추가 예정
             "PASSWORD" -> {
-                if (email == null || signupRequest.password == null) {
+                if (email == null || signupRequest.password == null || signupRequest.password == "") {
                     throw UserSignUpBadRequestException()
                 }
                 user = User(email, username, encodedPassword, accessToken = accessToken)
