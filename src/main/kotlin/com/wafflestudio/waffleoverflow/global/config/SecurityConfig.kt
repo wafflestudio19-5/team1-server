@@ -5,6 +5,8 @@ import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtAuthenticationEntryPoi
 import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtAuthenticationFilter
 import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import com.wafflestudio.waffleoverflow.global.auth.model.UserPrincipalDetailService
+import com.wafflestudio.waffleoverflow.global.auth.oauth2.handler.OAuth2SuccessHandler
+import com.wafflestudio.waffleoverflow.global.auth.oauth2.service.CustomAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -29,6 +31,8 @@ class SecurityConfig(
     private val jwtTokenProvider: JwtTokenProvider,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
     private val userPrincipalDetailService: UserPrincipalDetailService,
+    private val customAuth2UserService: CustomAuth2UserService,
+    private val oAuth2SuccessHandler: OAuth2SuccessHandler,
 ) : WebSecurityConfigurerAdapter() {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -81,8 +85,13 @@ class SecurityConfig(
             .antMatchers(HttpMethod.GET, "/api/ping/").permitAll()
             .antMatchers(HttpMethod.GET, "/api/question/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/answer/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/login/oauth2/google/").permitAll()
             .anyRequest().authenticated()
             .and().logout()
+            .and()
+            .oauth2Login()
+            .successHandler(oAuth2SuccessHandler)
+            .userInfoEndpoint().userService(customAuth2UserService)
     }
 
     override fun configure(web: WebSecurity) {
