@@ -1,4 +1,4 @@
-name: CI 
+name: CI
 
 on: [push]
 
@@ -18,6 +18,8 @@ jobs:
       run: |
         sudo systemctl start mysql.service
         mysql -uroot -proot < ./scripts/sql/init-db.sql
+    - name: Create application.yml
+      run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
     - name: Validate Gradle wrapper
       uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
     - name: Grant execute permission for gradlew
@@ -31,5 +33,5 @@ jobs:
     - name: Upload JAR
       uses: actions/upload-artifact@v2
       with:
-        name: Package 
+        name: Package
         path: build/libs

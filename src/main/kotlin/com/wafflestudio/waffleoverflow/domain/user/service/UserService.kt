@@ -2,13 +2,14 @@ package com.wafflestudio.waffleoverflow.domain.user.service
 
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.exception.BadGrantTypeException
-import com.wafflestudio.waffleoverflow.domain.user.exception.CouldNotFoundUser
+import com.wafflestudio.waffleoverflow.domain.user.exception.UserNotFoundException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserSignUpBadRequestException
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.user.repository.UserRepository
 import com.wafflestudio.waffleoverflow.domain.user.util.S3Utils
 import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -45,8 +46,12 @@ class UserService(
         return userRepository.save(user)
     }
 
+    fun findUserById(id: Long): User {
+        return userRepository.findByIdOrNull(id) ?: throw UserNotFoundException("User $id does not exist")
+    }
+
     fun loadUserInfo(user: User): User {
-        return userRepository.findByEmail(user.email) ?: throw CouldNotFoundUser()
+        return userRepository.findByEmail(user.email) ?: throw UserNotFoundException()
     }
 
     fun editProfileImage(
