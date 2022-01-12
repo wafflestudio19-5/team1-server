@@ -23,6 +23,7 @@ class OAuth2SuccessHandler(
     ) {
         val oAuth2User = authentication?.principal as OAuth2User
         val email = oAuth2User.attributes["email"] as String
+        val username = oAuth2User.attributes["username"] as String
         val accessToken = jwtTokenProvider.generateToken(email)
 
         if (request == null || response == null)
@@ -34,7 +35,7 @@ class OAuth2SuccessHandler(
             userRepository.save(
                 User(
                     email = email,
-                    username = oAuth2User.attributes["name"] as String,
+                    username = username,
                     accessToken = accessToken
                 )
             )
