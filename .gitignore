@@ -17,7 +17,7 @@ out/
 !gradle-wrapper.jar
 
 # Application
-src/main/resources/application.yml
+src/**/application.yml
 
 
 !**/src/main/**/build/
