@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -75,5 +76,13 @@ class UserController(
     ): UserDto.Response {
         val thisUser = userService.editProfileImage(user, multipartFile)
         return UserDto.Response(thisUser)
+    }
+
+    @DeleteMapping("/me/remove/")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteAccount(
+        @CurrentUser user: User,
+    ) {
+        userService.deleteMyAccount(user)
     }
 }

@@ -46,6 +46,10 @@ class UserService(
         return userRepository.save(user)
     }
 
+    fun deleteMyAccount(user: User) {
+        userRepository.delete(user)
+    }
+
     fun findUserById(id: Long): User {
         return userRepository.findByIdOrNull(id) ?: throw UserNotFoundException("User $id does not exist")
     }
