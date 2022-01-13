@@ -62,4 +62,4 @@ HELP.md
 
 
 ### properties ###
-src/**/*.yml
+src/**/application.yml

@@ -20,7 +20,6 @@ jobs:
         mysql -uroot -proot < ./scripts/sql/init-db.sql
     - name: Create application.yml
       run: |
-        mkdir -p ./src/main/resources
         echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
     - name: Validate Gradle wrapper
       uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
