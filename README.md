@@ -38,6 +38,7 @@ bash /scripts/bash/init-db.sh
         │        │   └── TAG - repository, service, model
         │        └── global
         │            ├── auth - JWT, SigninAuthenticationFilter
+        │            │   └── OAuth2 - Handler, Service
         │            ├── common.exception - ErrorType(ENUM), ErrorResponse
         │            └── config
         │                └── SecurityConfig
