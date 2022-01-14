@@ -2,6 +2,7 @@ package com.wafflestudio.waffleoverflow
 
 import com.wafflestudio.waffleoverflow.domain.answer.model.Answer
 import com.wafflestudio.waffleoverflow.domain.answer.repository.AnswerRepository
+import com.wafflestudio.waffleoverflow.domain.comment.model.Comment
 import com.wafflestudio.waffleoverflow.domain.comment.repository.CommentRepository
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.question.repository.QuestionRepository
@@ -128,5 +129,49 @@ class DataLoader(
         answerRepository.save(answerB)
         answerRepository.save(answerC)
         answerRepository.save(answerD)
+
+        // Create Comment
+        val commentA = Comment(
+            user = userG,
+            body = "This is Comment.",
+            question = questionA,
+        )
+
+        val commentB = Comment(
+            user = userF,
+            body = "This is Comment.",
+            question = questionB,
+        )
+
+        val commentC = Comment(
+            user = userE,
+            body = "This is Comment.",
+            question = questionC,
+        )
+
+        val commentD = Comment(
+            user = userD,
+            body = "This is Comment.",
+            answer = answerA
+        )
+
+        val commentE = Comment(
+            user = userF,
+            body = "This is Comment.",
+            answer = answerA,
+        )
+
+        val commentF = Comment(
+            user = userA,
+            body = "This is Comment.",
+            answer = answerC
+        )
+
+        commentRepository.save(commentA)
+        commentRepository.save(commentB)
+        commentRepository.save(commentC)
+        commentRepository.save(commentD)
+        commentRepository.save(commentE)
+        commentRepository.save(commentF)
     }
 }
