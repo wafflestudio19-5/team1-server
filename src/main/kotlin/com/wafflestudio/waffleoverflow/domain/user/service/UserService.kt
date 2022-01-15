@@ -2,6 +2,7 @@ package com.wafflestudio.waffleoverflow.domain.user.service
 
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.exception.BadGrantTypeException
+import com.wafflestudio.waffleoverflow.domain.user.exception.TooLongUsername
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserNotFoundException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserSignUpBadRequestException
@@ -24,6 +25,7 @@ class UserService(
     fun signup(signupRequest: UserDto.SignupRequest): User {
         if (userRepository.existsUserByUsername(signupRequest.username)) throw UserAlreadyExistsException()
         if (userRepository.existsUserByEmail(signupRequest.email)) throw UserAlreadyExistsException()
+        if (!checkUsernameLength(signupRequest.username)) throw TooLongUsername()
         val user: User?
         val email = signupRequest.email
         val username = signupRequest.username
@@ -56,6 +58,10 @@ class UserService(
 
     fun loadUserInfo(user: User): User {
         return userRepository.findByEmail(user.email) ?: throw UserNotFoundException()
+    }
+
+    fun checkUsernameLength(username: String): Boolean {
+        return username.length <= 20
     }
 
     fun editProfileImage(
