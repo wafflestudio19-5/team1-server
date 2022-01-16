@@ -170,4 +170,14 @@ class QuestionController(
         val answer = answerService.findById((answer_id))
         return questionService.acceptAnswer(user, question, answer)
     }
+
+    @GetMapping("/search/{keyword}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun searchQuestions(
+        @PageableDefault(size = 15)
+        pageable: Pageable,
+        @PathVariable keyword: String?,
+    ): Page<QuestionDto.Response>? {
+        return questionRepository.findQuestionByTitleContaining(keyword, pageable)?.map { QuestionDto.Response(it) }
+    }
 }
