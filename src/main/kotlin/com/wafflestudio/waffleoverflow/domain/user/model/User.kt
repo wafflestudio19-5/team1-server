@@ -24,7 +24,6 @@ class User(
     @field:NotBlank
     var username: String,
 
-    // @field:NotBlank
     @Column
     var password: String? = null,
 
@@ -35,6 +34,17 @@ class User(
     var accessToken: String,
 
     var s3Path: String? = null,
+
+    var location: String? = null,
+
+    var userTitle: String? = null,
+
+    @Column(columnDefinition = "LONGTEXT")
+    var aboutMe: String? = null,
+
+    var websiteLink: String? = null,
+
+    var githubLink: String? = null,
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var questions: MutableList<Question> = mutableListOf(),

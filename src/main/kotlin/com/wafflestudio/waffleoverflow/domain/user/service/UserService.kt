@@ -13,9 +13,11 @@ import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 
 @Service
+@Transactional
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -74,5 +76,24 @@ class UserService(
         userRepository.save(user)
 
         return user
+    }
+
+    fun editUserProfile(
+        user: User,
+        editProfileRequest: UserDto.EditProfileRequest,
+    ): User {
+        val location = editProfileRequest.location
+        val userTitle = editProfileRequest.userTitle
+        val aboutMe = editProfileRequest.aboutMe
+        val websiteLink = editProfileRequest.websiteLink
+        val githubLink = editProfileRequest.githubLink
+
+        if (location != null) user.location = location
+        if (userTitle != null) user.userTitle = userTitle
+        if (aboutMe != null) user.aboutMe = aboutMe
+        if (websiteLink != null) user.websiteLink = websiteLink
+        if (githubLink != null) user.githubLink = githubLink
+
+        return userRepository.save(user)
     }
 }
