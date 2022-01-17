@@ -4,6 +4,7 @@ import com.wafflestudio.waffleoverflow.domain.answer.model.Answer
 import com.wafflestudio.waffleoverflow.domain.comment.dto.CommentDto
 import com.wafflestudio.waffleoverflow.domain.comment.exception.CommentNotFoundException
 import com.wafflestudio.waffleoverflow.domain.comment.exception.NotCommentAuthorException
+import com.wafflestudio.waffleoverflow.domain.comment.exception.TooLongCommentException
 import com.wafflestudio.waffleoverflow.domain.comment.model.Comment
 import com.wafflestudio.waffleoverflow.domain.comment.repository.CommentRepository
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
@@ -31,26 +32,6 @@ class CommentService(
         answer: Answer,
     ) = addComment(requestBody, user, null, answer)
 
-    private fun addComment(
-        requestBody: CommentDto.Request,
-        user: User,
-        question: Question?,
-        answer: Answer?,
-    ): Comment {
-        val body = requestBody.body
-        val comment = Comment(user, body, question, answer)
-        commentRepository.save(comment)
-        return comment
-    }
-
-    fun validateUser(
-        user: User,
-        comment: Comment
-    ) {
-        if (user.id != comment.user.id)
-            throw NotCommentAuthorException("User $user.id is not the author of comment $comment.id")
-    }
-
     fun editComment(
         requestBody: CommentDto.Request,
         comment: Comment,
@@ -58,7 +39,10 @@ class CommentService(
     ): Comment {
         validateUser(user, comment)
 
-        comment.body = requestBody.body
+        val body = requestBody.body
+        checkCommentLength(body)
+
+        comment.body = body
         commentRepository.save(comment)
 
         return comment
@@ -70,5 +54,35 @@ class CommentService(
     ) {
         validateUser(user, comment)
         commentRepository.delete(comment)
+    }
+
+    private fun addComment(
+        requestBody: CommentDto.Request,
+        user: User,
+        question: Question?,
+        answer: Answer?,
+    ): Comment {
+        val body = requestBody.body
+        checkCommentLength(body)
+        val comment = Comment(user, body, question, answer)
+        commentRepository.save(comment)
+        return comment
+    }
+
+    private fun validateUser(
+        user: User,
+        comment: Comment
+    ) {
+        if (user.id != comment.user.id) {
+            throw NotCommentAuthorException("User $user.id is not the author of comment $comment.id")
+        }
+    }
+
+    private fun checkCommentLength(
+        body: String
+    ) {
+        if (body.length >= 250) {
+            throw TooLongCommentException("Comment is longer than 250 characters")
+        }
     }
 }

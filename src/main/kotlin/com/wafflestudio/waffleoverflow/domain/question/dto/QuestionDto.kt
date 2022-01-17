@@ -46,10 +46,12 @@ class QuestionDto {
     data class ResponseSummary(
         val id: Long,
         val title: String,
+        val createdAt: LocalDateTime?
     ) {
         constructor(question: Question) : this(
             id = question.id,
             title = question.title,
+            createdAt = question.createdAt,
         )
     }
 }
