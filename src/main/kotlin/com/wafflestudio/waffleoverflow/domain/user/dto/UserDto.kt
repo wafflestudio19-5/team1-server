@@ -13,7 +13,12 @@ class UserDto {
         val accessToken: String,
         val image: String?,
         val questions: List<QuestionDto.ResponseSummary>,
-        val answers: List<AnswerDto.ResponseSummary>
+        val answers: List<AnswerDto.ResponseSummary>,
+        val location: String?,
+        val userTitle: String?,
+        val aboutMe: String?,
+        val websiteLink: String?,
+        val githubLink: String?,
     ) {
         constructor(user: User) : this(
             id = user.id,
@@ -22,7 +27,12 @@ class UserDto {
             accessToken = user.accessToken,
             image = user.s3Path,
             questions = user.questions.map { QuestionDto.ResponseSummary(it) },
-            answers = user.answers.map { AnswerDto.ResponseSummary(it) }
+            answers = user.answers.map { AnswerDto.ResponseSummary(it) },
+            location = user.location,
+            userTitle = user.userTitle,
+            aboutMe = user.aboutMe,
+            websiteLink = user.websiteLink,
+            githubLink = user.githubLink,
         )
     }
 
@@ -48,5 +58,13 @@ class UserDto {
 
         @field:NotBlank
         var grantType: String? = "PASSWORD",
+    )
+
+    data class EditProfileRequest(
+        val location: String?,
+        val userTitle: String?,
+        val aboutMe: String?,
+        val websiteLink: String?,
+        val githubLink: String?,
     )
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -76,6 +77,16 @@ class UserController(
     ): UserDto.Response {
         val thisUser = userService.editProfileImage(user, multipartFile)
         return UserDto.Response(thisUser)
+    }
+
+    @PutMapping("/me/edit/")
+    @ResponseStatus(HttpStatus.OK)
+    fun editProfile(
+        @CurrentUser user: User,
+        @Valid @RequestBody editProfileRequest: UserDto.EditProfileRequest,
+    ): UserDto.Response {
+        val editUser = userService.editUserProfile(user, editProfileRequest)
+        return UserDto.Response(editUser)
     }
 
     @DeleteMapping("/me/remove/")

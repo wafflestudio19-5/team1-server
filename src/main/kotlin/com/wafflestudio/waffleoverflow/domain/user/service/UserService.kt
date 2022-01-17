@@ -2,6 +2,8 @@ package com.wafflestudio.waffleoverflow.domain.user.service
 
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.exception.BadGrantTypeException
+import com.wafflestudio.waffleoverflow.domain.user.exception.EmptyRequestException
+import com.wafflestudio.waffleoverflow.domain.user.exception.TooLongUsername
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserNotFoundException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserSignUpBadRequestException
@@ -12,9 +14,11 @@ import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 
 @Service
+@Transactional
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -24,6 +28,7 @@ class UserService(
     fun signup(signupRequest: UserDto.SignupRequest): User {
         if (userRepository.existsUserByUsername(signupRequest.username)) throw UserAlreadyExistsException()
         if (userRepository.existsUserByEmail(signupRequest.email)) throw UserAlreadyExistsException()
+        if (!checkUsernameLength(signupRequest.username)) throw TooLongUsername()
         val user: User?
         val email = signupRequest.email
         val username = signupRequest.username
@@ -58,6 +63,10 @@ class UserService(
         return userRepository.findByEmail(user.email) ?: throw UserNotFoundException()
     }
 
+    private fun checkUsernameLength(username: String): Boolean {
+        return username.length <= 20
+    }
+
     fun editProfileImage(
         user: User,
         multipartFile: MultipartFile
@@ -68,5 +77,27 @@ class UserService(
         userRepository.save(user)
 
         return user
+    }
+
+    fun editUserProfile(
+        user: User,
+        editProfileRequest: UserDto.EditProfileRequest,
+    ): User {
+        val location = editProfileRequest.location
+        val userTitle = editProfileRequest.userTitle
+        val aboutMe = editProfileRequest.aboutMe
+        val websiteLink = editProfileRequest.websiteLink
+        val githubLink = editProfileRequest.githubLink
+
+        if (location == null && userTitle == null && aboutMe == null && websiteLink == null && githubLink == null)
+            throw EmptyRequestException("Empty request.")
+
+        if (location != null) user.location = location
+        if (userTitle != null) user.userTitle = userTitle
+        if (aboutMe != null) user.aboutMe = aboutMe
+        if (websiteLink != null) user.websiteLink = websiteLink
+        if (githubLink != null) user.githubLink = githubLink
+
+        return userRepository.save(user)
     }
 }
