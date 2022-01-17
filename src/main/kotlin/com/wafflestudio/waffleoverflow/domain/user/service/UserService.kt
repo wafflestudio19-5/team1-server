@@ -2,6 +2,7 @@ package com.wafflestudio.waffleoverflow.domain.user.service
 
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.exception.BadGrantTypeException
+import com.wafflestudio.waffleoverflow.domain.user.exception.EmptyRequestException
 import com.wafflestudio.waffleoverflow.domain.user.exception.TooLongUsername
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserNotFoundException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsException
@@ -87,6 +88,9 @@ class UserService(
         val aboutMe = editProfileRequest.aboutMe
         val websiteLink = editProfileRequest.websiteLink
         val githubLink = editProfileRequest.githubLink
+
+        if (location == null && userTitle == null && aboutMe == null && websiteLink == null && githubLink == null)
+            throw EmptyRequestException("Empty request.")
 
         if (location != null) user.location = location
         if (userTitle != null) user.userTitle = userTitle
