@@ -10,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -79,7 +78,7 @@ class UserController(
         return UserDto.Response(thisUser)
     }
 
-    @PatchMapping("/me/edit/")
+    @PutMapping("/me/edit/")
     @ResponseStatus(HttpStatus.OK)
     fun editProfile(
         @CurrentUser user: User,

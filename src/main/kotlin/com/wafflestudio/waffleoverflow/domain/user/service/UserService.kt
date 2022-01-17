@@ -63,7 +63,7 @@ class UserService(
         return userRepository.findByEmail(user.email) ?: throw UserNotFoundException()
     }
 
-    fun checkUsernameLength(username: String): Boolean {
+    private fun checkUsernameLength(username: String): Boolean {
         return username.length <= 20
     }
 
