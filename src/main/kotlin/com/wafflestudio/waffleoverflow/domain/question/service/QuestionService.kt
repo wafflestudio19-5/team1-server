@@ -23,10 +23,6 @@ class QuestionService(
         return questionRepository.findByIdOrNull(id) ?: throw QuestionNotFoundException("Question $id does not exist")
     }
 
-    fun findAll(): List<Question> {
-        return questionRepository.findAll()
-    }
-
     fun addQuestion(
         requestBody: QuestionDto.Request,
         user: User
