@@ -75,16 +75,21 @@ class VoteService(
         question: Question?,
         answer: Answer?,
     ): VoteDto.Response {
+        val status = getStatus(requestBody)
+        val vote = Vote(user, question, answer, status)
+        voteRepository.save(vote)
+        return VoteDto.Response(vote)
+    }
+
+    private fun getStatus(
+        requestBody: VoteDto.Request
+    ): VoteStatus {
         val status = when (requestBody.status) {
             "Up" -> VoteStatus.UP
             "Down" -> VoteStatus.DOWN
             else -> VoteStatus.NONE
         }
-
-        val vote = Vote(user, question, answer, status)
-        voteRepository.save(vote)
-
-        return VoteDto.Response(vote)
+        return status
     }
 
     private fun updateQuestionVote(
@@ -105,11 +110,7 @@ class VoteService(
         question: Question?,
         answer: Answer?,
     ): VoteDto.Response {
-        var status = when (requestBody.status) {
-            "Up" -> VoteStatus.UP
-            "Down" -> VoteStatus.DOWN
-            else -> VoteStatus.NONE
-        }
+        var status = getStatus(requestBody)
 
         // find the user's vote
         var vote = Vote(user, question, answer, status)
@@ -123,7 +124,6 @@ class VoteService(
         // check for neutral vote and change status
         status = checkNeutralVote(vote, status)
         vote.status = status
-
         return VoteDto.Response(vote)
     }
 
