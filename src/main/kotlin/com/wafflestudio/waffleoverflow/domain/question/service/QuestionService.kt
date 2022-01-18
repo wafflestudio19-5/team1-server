@@ -72,7 +72,7 @@ class QuestionService(
     fun acceptAnswer(
         user: User,
         question: Question,
-        answer: Answer,
+        answer: Answer
     ): QuestionDto.Response {
         validateUser(user, question)
         if (!checkAnswerIsUnderQuestion(question, answer)) {
