@@ -1,12 +1,14 @@
 # 🧇 WaffleOverFlow Server
 
 ## Tech Stack
-<img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=Kotlin&logoColor=white"/></a> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/></a> <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=flat-square&logo=Spring Security&logoColor=white"/></a> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/></a> <img src="https://img.shields.io/badge/JWT-6DB33F?style=flat-square&logo=Json Web Tokens&logoColor=white"/></a> <img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=NGINX&logoColor=white"/></a> <img src="https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=Amazon AWS&logoColor=white"/></a>
+![image](https://user-images.githubusercontent.com/70942197/149767498-facb315b-2432-46e1-b63c-cc817cbc135a.png)
 
 ## Members
 |Leader|Member|Member|
 |:---:|:---:|:---:|
 |[문보현](https://github.com/moonpiderman)|[문용균](https://github.com/yg-moon)|[최하늘](https://github.com/caelum02)|
+
+## 
 
 ## Create Database
 
@@ -38,6 +40,7 @@ bash /scripts/bash/init-db.sh
         │        │   └── TAG - repository, service, model
         │        └── global
         │            ├── auth - JWT, SigninAuthenticationFilter
+        │            │   └── OAuth2 - Handler, Service
         │            ├── common.exception - ErrorType(ENUM), ErrorResponse
         │            └── config
         │                └── SecurityConfig
@@ -47,4 +50,5 @@ bash /scripts/bash/init-db.sh
 ```
 
 ## Database Scheme
-![image](https://user-images.githubusercontent.com/70942197/145508752-4f98c975-a627-4840-9ae5-9ea84dba9115.png)
+![image](https://user-images.githubusercontent.com/70942197/149756651-8580a24b-f572-49c9-9bae-705b9cde04aa.png)
+

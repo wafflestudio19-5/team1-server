@@ -24,21 +24,37 @@ class User(
     @field:NotBlank
     var username: String,
 
-    @field:NotBlank
-    var password: String,
+    @Column
+    var password: String? = null,
 
     @JsonIgnore
     val authorities: String = "User",
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @field:NotBlank
+    var accessToken: String,
+
+    var s3Path: String? = null,
+
+    var location: String? = null,
+
+    var userTitle: String? = null,
+
+    @Column(columnDefinition = "LONGTEXT")
+    var aboutMe: String? = null,
+
+    var websiteLink: String? = null,
+
+    var githubLink: String? = null,
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var questions: MutableList<Question> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var answers: MutableList<Answer> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var votes: MutableList<Vote> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var comments: MutableList<Comment> = mutableListOf(),
 ) : BaseEntity()

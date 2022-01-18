@@ -28,8 +28,12 @@ class SigninAuthenticationFilter(
         chain: FilterChain,
         authResult: Authentication,
     ) {
-        response.addHeader("Authentication", jwtTokenProvider.generateToken(authResult))
-        response.status = HttpServletResponse.SC_NO_CONTENT
+        val token = jwtTokenProvider.generateToken(authResult)
+        response.contentType = "application/json"
+        response.characterEncoding = "utf-8"
+        response.addHeader("Authentication", token)
+        response.writer.write("{\"accessToken\" : " + "\"" + token + "\"" + "}")
+        response.status = HttpServletResponse.SC_OK
     }
 
     override fun unsuccessfulAuthentication(

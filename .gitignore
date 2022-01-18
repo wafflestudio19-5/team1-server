@@ -17,7 +17,6 @@ out/
 !gradle-wrapper.jar
 
 
-
 !**/src/main/**/build/
 !**/src/test/**/build/
 
@@ -63,4 +62,4 @@ HELP.md
 
 
 ### properties ###
-#/src/main/resources/*.yml
+src/**/application.yml

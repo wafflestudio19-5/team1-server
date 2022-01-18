@@ -2,21 +2,24 @@ package com.wafflestudio.waffleoverflow.domain.model
 
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
+import javax.persistence.EntityListeners
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener::class)
 open class BaseTimeEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    open val id: Long = 0,
 
     @CreatedDate
-    var createdAt: LocalDateTime? = LocalDateTime.now(),
+    open var createdAt: LocalDateTime? = LocalDateTime.now(),
 
     @LastModifiedDate
-    var updatedAt: LocalDateTime? = LocalDateTime.now(),
+    open var updatedAt: LocalDateTime? = LocalDateTime.now(),
 )

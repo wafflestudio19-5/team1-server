@@ -1,10 +1,25 @@
 spring:
   profiles:
     active: local
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: example
+            client-secret: example
+            scope: example
 app:
-    jwt:
-        jwt-secret-key: waffleoverflow
-        jwt-expiration-in-ms: 86400000
+  jwt:
+    jwt-secret-key: example
+    jwt-expiration-in-ms: 31536000000
+aws:
+  access-key: example
+  secret-key: example
+  s3:
+    endpoint: example
+    bucket: example
+    dir: example
 ---
 spring:
   config:
@@ -21,26 +36,8 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
       # create: 시작 시 테이블 drop 후 재생성
       # update: 시작 시 자동 migrate
       # none: db 그대로
       # create-drop: 시작 시 테이블 create, 종료 시 drop
-
-#---
-#spring:
-#  config:
-#    activate:
-#      on-profile: prod
-#  datasource:
-#    url:
-#    username:
-#    password:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#  sql:
-#    init:
-#      mode: always
-#  jpa:
-#    generate-ddl: true
-#    hibernate:
-#      ddl-auto: none

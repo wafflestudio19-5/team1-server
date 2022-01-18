@@ -5,6 +5,8 @@ import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtAuthenticationEntryPoi
 import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtAuthenticationFilter
 import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import com.wafflestudio.waffleoverflow.global.auth.model.UserPrincipalDetailService
+import com.wafflestudio.waffleoverflow.global.auth.oauth2.handler.OAuth2SuccessHandler
+import com.wafflestudio.waffleoverflow.global.auth.oauth2.service.CustomAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -18,6 +20,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -26,6 +31,8 @@ class SecurityConfig(
     private val jwtTokenProvider: JwtTokenProvider,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
     private val userPrincipalDetailService: UserPrincipalDetailService,
+    private val customAuth2UserService: CustomAuth2UserService,
+    private val oAuth2SuccessHandler: OAuth2SuccessHandler,
 ) : WebSecurityConfigurerAdapter() {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -40,6 +47,22 @@ class SecurityConfig(
         return provider
     }
 
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val corsConfiguration = CorsConfiguration()
+
+        corsConfiguration.addAllowedOrigin("https://www.waffleoverflow.shop")
+        corsConfiguration.addAllowedOrigin("http://localhost:3000")
+        corsConfiguration.addAllowedHeader("*")
+        corsConfiguration.addAllowedMethod("*")
+        corsConfiguration.allowCredentials = true
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", corsConfiguration)
+
+        return source
+    }
+
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth
             .authenticationProvider(daoAuthenticationProvider())
@@ -47,7 +70,7 @@ class SecurityConfig(
 
     override fun configure(http: HttpSecurity) {
         http
-            .cors()
+            .cors().configurationSource(corsConfigurationSource())
             .and()
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -59,7 +82,16 @@ class SecurityConfig(
             .authorizeRequests()
             .antMatchers("/api/user/signin/").permitAll()
             .antMatchers(HttpMethod.POST, "/api/user/signup/").anonymous()
+            .antMatchers(HttpMethod.GET, "/api/ping/").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/question/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/answer/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/login/oauth2/google/").permitAll()
             .anyRequest().authenticated()
+            .and().logout()
+            .and()
+            .oauth2Login()
+            .successHandler(oAuth2SuccessHandler)
+            .userInfoEndpoint().userService(customAuth2UserService)
     }
 
     override fun configure(web: WebSecurity) {
