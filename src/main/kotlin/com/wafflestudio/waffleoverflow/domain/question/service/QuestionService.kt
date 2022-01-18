@@ -3,7 +3,9 @@ package com.wafflestudio.waffleoverflow.domain.question.service
 import com.wafflestudio.waffleoverflow.domain.answer.dto.AnswerDto
 import com.wafflestudio.waffleoverflow.domain.answer.model.Answer
 import com.wafflestudio.waffleoverflow.domain.answer.repository.AnswerRepository
+import com.wafflestudio.waffleoverflow.domain.answer.service.AnswerService
 import com.wafflestudio.waffleoverflow.domain.question.dto.QuestionDto
+import com.wafflestudio.waffleoverflow.domain.question.exception.AcceptedAnswerExistsException
 import com.wafflestudio.waffleoverflow.domain.question.exception.QuestionNotFoundException
 import com.wafflestudio.waffleoverflow.domain.question.exception.UnauthorizedQuestionEditException
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class QuestionService(
+    private val answerService: AnswerService,
     private val questionRepository: QuestionRepository,
     private val answerRepository: AnswerRepository,
 ) {
@@ -67,11 +70,18 @@ class QuestionService(
 
     fun acceptAnswer(
         user: User,
-        question: Question,
-        answer: Answer
+        questionId: Long,
+        answerId: Long,
     ): QuestionDto.Response {
+        val question = findById(questionId)
+        val answer = answerService.findById(answerId)
+
         validateUser(user, question)
-        answer.accepted = !answer.accepted
+        if (!answer.accepted && checkAcceptedAnswerExists(question)) {
+            throw AcceptedAnswerExistsException("Accepted answer already exists")
+        }
+
+        answer.accepted = true
         return QuestionDto.Response(question)
     }
 
@@ -81,5 +91,11 @@ class QuestionService(
     ) {
         if (user.id != question.user.id)
             throw UnauthorizedQuestionEditException("User $user.id is not the author of question $question.id")
+    }
+
+    private fun checkAcceptedAnswerExists(
+        question: Question
+    ): Boolean {
+        return question.answers.any { it.accepted }
     }
 }
