@@ -57,23 +57,13 @@ class VoteService(
         requestBody: VoteDto.Request,
         user: User,
         question: Question,
-    ): VoteDto.Response {
-        question.voteCount =
-            question.votes.count { it.status == VoteStatus.UP } -
-            question.votes.count { it.status == VoteStatus.DOWN }
-        return addVote(requestBody, user, question, null)
-    }
+    ) = addVote(requestBody, user, question, null)
 
     private fun addAnswerVote(
         requestBody: VoteDto.Request,
         user: User,
         answer: Answer,
-    ): VoteDto.Response {
-        answer.voteCount =
-            answer.votes.count { it.status == VoteStatus.UP } -
-            answer.votes.count { it.status == VoteStatus.DOWN }
-        return addVote(requestBody, user, null, answer)
-    }
+    ) = addVote(requestBody, user, null, answer)
 
     private fun addVote(
         requestBody: VoteDto.Request,
@@ -84,7 +74,22 @@ class VoteService(
         val status = getStatus(requestBody)
         val vote = Vote(user, question, answer, status)
         voteRepository.save(vote)
+        updateVoteCount(question, answer)
         return VoteDto.Response(vote)
+    }
+
+    private fun updateVoteCount(
+        question: Question?,
+        answer: Answer?
+    ) {
+        if (question != null) {
+            question.voteCount = question.votes.count { it.status == VoteStatus.UP } -
+                question.votes.count { it.status == VoteStatus.DOWN }
+        }
+        if (answer != null) {
+            answer.voteCount = answer.votes.count { it.status == VoteStatus.UP } -
+                answer.votes.count { it.status == VoteStatus.DOWN }
+        }
     }
 
     private fun getStatus(
@@ -127,9 +132,10 @@ class VoteService(
             vote = answer.votes.find { it.user.id == user.id }!!
         }
 
-        // check for neutral vote and change status
         status = checkNeutralVote(vote, status)
         vote.status = status
+        updateVoteCount(question, answer)
+
         return VoteDto.Response(vote)
     }
 
