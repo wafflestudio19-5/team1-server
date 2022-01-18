@@ -1,9 +1,7 @@
 package com.wafflestudio.waffleoverflow.domain.vote.service
 
 import com.wafflestudio.waffleoverflow.domain.answer.model.Answer
-import com.wafflestudio.waffleoverflow.domain.answer.service.AnswerService
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
-import com.wafflestudio.waffleoverflow.domain.question.service.QuestionService
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.dto.VoteDto
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
@@ -16,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class VoteService(
     private val voteRepository: VoteRepository,
-    private val questionService: QuestionService,
-    private val answerService: AnswerService
 ) {
     fun changeQuestionVote(
         requestBody: VoteDto.Request,
