@@ -70,18 +70,15 @@ class QuestionService(
 
     fun acceptAnswer(
         user: User,
-        questionId: Long,
-        answerId: Long,
+        question: Question,
+        answer: Answer,
     ): QuestionDto.Response {
-        val question = findById(questionId)
-        val answer = answerService.findById(answerId)
-
         validateUser(user, question)
         if (!answer.accepted && checkAcceptedAnswerExists(question)) {
             throw AcceptedAnswerExistsException("Accepted answer already exists")
         }
 
-        answer.accepted = true
+        answer.accepted = !answer.accepted
         return QuestionDto.Response(question)
     }
 
