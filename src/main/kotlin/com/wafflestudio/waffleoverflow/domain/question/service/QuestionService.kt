@@ -71,7 +71,7 @@ class QuestionService(
         answer: Answer
     ): QuestionDto.Response {
         validateUser(user, question)
-        answer.accepted = true
+        answer.accepted = !answer.accepted
         return QuestionDto.Response(question)
     }
 
