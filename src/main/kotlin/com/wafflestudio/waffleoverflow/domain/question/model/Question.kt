@@ -5,7 +5,6 @@ import com.wafflestudio.waffleoverflow.domain.comment.model.Comment
 import com.wafflestudio.waffleoverflow.domain.model.BaseTimeEntity
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
-import com.wafflestudio.waffleoverflow.domain.vote.model.VoteStatus
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -27,7 +26,7 @@ class Question(
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var votes: MutableList<Vote> = mutableListOf(),
 
-    var voteCount: Int = votes.count { it.status == VoteStatus.UP } - votes.count { it.status == VoteStatus.DOWN },
+    var voteCount: Int = 0,
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var comments: MutableList<Comment> = mutableListOf(),

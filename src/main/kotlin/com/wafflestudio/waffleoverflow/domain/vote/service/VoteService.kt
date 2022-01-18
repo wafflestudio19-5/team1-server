@@ -57,13 +57,23 @@ class VoteService(
         requestBody: VoteDto.Request,
         user: User,
         question: Question,
-    ) = addVote(requestBody, user, question, null)
+    ): VoteDto.Response {
+        question.voteCount =
+            question.votes.count { it.status == VoteStatus.UP } -
+            question.votes.count { it.status == VoteStatus.DOWN }
+        return addVote(requestBody, user, question, null)
+    }
 
     private fun addAnswerVote(
         requestBody: VoteDto.Request,
         user: User,
         answer: Answer,
-    ) = addVote(requestBody, user, null, answer)
+    ): VoteDto.Response {
+        answer.voteCount =
+            answer.votes.count { it.status == VoteStatus.UP } -
+            answer.votes.count { it.status == VoteStatus.DOWN }
+        return addVote(requestBody, user, null, answer)
+    }
 
     private fun addVote(
         requestBody: VoteDto.Request,
