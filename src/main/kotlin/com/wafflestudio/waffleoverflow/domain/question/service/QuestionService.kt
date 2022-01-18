@@ -6,6 +6,7 @@ import com.wafflestudio.waffleoverflow.domain.answer.repository.AnswerRepository
 import com.wafflestudio.waffleoverflow.domain.answer.service.AnswerService
 import com.wafflestudio.waffleoverflow.domain.question.dto.QuestionDto
 import com.wafflestudio.waffleoverflow.domain.question.exception.AcceptedAnswerExistsException
+import com.wafflestudio.waffleoverflow.domain.question.exception.AnswerIsNotUnderQuestionException
 import com.wafflestudio.waffleoverflow.domain.question.exception.QuestionNotFoundException
 import com.wafflestudio.waffleoverflow.domain.question.exception.UnauthorizedQuestionEditException
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
@@ -74,6 +75,10 @@ class QuestionService(
         answer: Answer,
     ): QuestionDto.Response {
         validateUser(user, question)
+        if (!checkAnswerIsUnderQuestion(question, answer)) {
+            throw AnswerIsNotUnderQuestionException("Answer does not belong to the question")
+        }
+
         if (!answer.accepted && checkAcceptedAnswerExists(question)) {
             throw AcceptedAnswerExistsException("Accepted answer already exists")
         }
@@ -94,5 +99,12 @@ class QuestionService(
         question: Question
     ): Boolean {
         return question.answers.any { it.accepted }
+    }
+
+    private fun checkAnswerIsUnderQuestion(
+        question: Question,
+        answer: Answer
+    ): Boolean {
+        return question.answers.any { it.id == answer.id }
     }
 }
