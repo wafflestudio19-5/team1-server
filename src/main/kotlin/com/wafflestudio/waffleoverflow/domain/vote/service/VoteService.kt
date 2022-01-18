@@ -121,22 +121,22 @@ class VoteService(
         }
 
         // check for neutral vote and change status
-        status = neutralVote(vote, status)
+        status = checkNeutralVote(vote, status)
         vote.status = status
 
         return VoteDto.Response(vote)
     }
 
-    private fun neutralVote(
+    private fun checkNeutralVote(
         vote: Vote,
-        status: VoteStatus
+        inputStatus: VoteStatus
     ): VoteStatus {
-        var realStatus = status
-        if ((vote.status == VoteStatus.UP && status == VoteStatus.DOWN) ||
-            (vote.status == VoteStatus.DOWN && status == VoteStatus.UP)
+        var outputStatus = inputStatus
+        if ((vote.status == VoteStatus.UP && inputStatus == VoteStatus.DOWN) ||
+            (vote.status == VoteStatus.DOWN && inputStatus == VoteStatus.UP)
         ) {
-            realStatus = VoteStatus.NONE
+            outputStatus = VoteStatus.NONE
         }
-        return realStatus
+        return outputStatus
     }
 }
