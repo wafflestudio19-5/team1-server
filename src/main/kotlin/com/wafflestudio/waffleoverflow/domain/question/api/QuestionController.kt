@@ -166,9 +166,7 @@ class QuestionController(
         @PathVariable question_id: Long,
         @PathVariable answer_id: Long,
     ): QuestionDto.Response {
-        val question = questionService.findById(question_id)
-        val answer = answerService.findById((answer_id))
-        return questionService.acceptAnswer(user, question, answer)
+        return questionService.acceptAnswer(user, question_id, answer_id)
     }
 
     @GetMapping("/search/{keyword}/")
