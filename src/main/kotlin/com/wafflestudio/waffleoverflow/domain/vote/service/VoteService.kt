@@ -49,15 +49,11 @@ class VoteService(
         answer: Answer?
     ): Boolean {
         if (question != null) {
-            val foundQuestion = questionService.findById(question.id)
-            return foundQuestion.votes.any { it.user.id == user.id }
+            return question.votes.any { it.user.id == user.id }
         }
-
         if (answer != null) {
-            val foundAnswer = answerService.findById(answer.id)
-            return foundAnswer.votes.any { it.user.id == user.id }
+            return answer.votes.any { it.user.id == user.id }
         }
-
         return false
     }
 
