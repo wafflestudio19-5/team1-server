@@ -167,7 +167,7 @@ class QuestionController(
         @PathVariable answer_id: Long,
     ): QuestionDto.Response {
         val question = questionService.findById(question_id)
-        val answer = answerService.findById((answer_id))
+        val answer = answerService.findById(answer_id)
         return questionService.acceptAnswer(user, question, answer)
     }
 
