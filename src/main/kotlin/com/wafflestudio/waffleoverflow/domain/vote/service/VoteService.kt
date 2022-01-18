@@ -111,25 +111,20 @@ class VoteService(
             else -> VoteStatus.NONE
         }
 
-        var realVote = voteRepository.findById(0)
-
+        // find the user's vote
+        var vote = Vote(user, question, answer, status)
         if (question != null) {
-            val vote = question.votes.find { it.user.id == user.id }
-            val voteId = vote!!.id
-            realVote = voteRepository.findById(voteId)
-            status = neutralVote(vote, status)
-            realVote.get().status = status
+            vote = question.votes.find { it.user.id == user.id }!!
         }
-
         if (answer != null) {
-            val vote = answer.votes.find { it.user.id == user.id }
-            val voteId = vote!!.id
-            realVote = voteRepository.findById(voteId)
-            status = neutralVote(vote, status)
-            realVote.get().status = status
+            vote = answer.votes.find { it.user.id == user.id }!!
         }
 
-        return VoteDto.Response(realVote.get())
+        // check for neutral vote and change status
+        status = neutralVote(vote, status)
+        vote.status = status
+
+        return VoteDto.Response(vote)
     }
 
     private fun neutralVote(
