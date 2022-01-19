@@ -14,7 +14,6 @@ class UserDto {
         val image: String?,
         val questions: List<QuestionDto.ResponseSummary>,
         val answers: List<AnswerDto.ResponseSummary>,
-        val displayName: String?,
         val location: String?,
         val userTitle: String?,
         val aboutMe: String?,
@@ -29,7 +28,6 @@ class UserDto {
             image = user.s3Path,
             questions = user.questions.map { QuestionDto.ResponseSummary(it) },
             answers = user.answers.map { AnswerDto.ResponseSummary(it) },
-            displayName = user.displayName,
             location = user.location,
             userTitle = user.userTitle,
             aboutMe = user.aboutMe,
@@ -63,7 +61,6 @@ class UserDto {
     )
 
     data class EditProfileRequest(
-        val displayName: String?,
         val location: String?,
         val userTitle: String?,
         val aboutMe: String?,
