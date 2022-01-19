@@ -83,22 +83,19 @@ class UserService(
         user: User,
         editProfileRequest: UserDto.EditProfileRequest,
     ): User {
-        val displayName = editProfileRequest.displayName
         val location = editProfileRequest.location
         val userTitle = editProfileRequest.userTitle
         val aboutMe = editProfileRequest.aboutMe
         val websiteLink = editProfileRequest.websiteLink
         val githubLink = editProfileRequest.githubLink
 
-        if (displayName == null &&
-            location == null &&
+        if (location == null &&
             userTitle == null &&
             aboutMe == null &&
             websiteLink == null &&
             githubLink == null
         ) throw EmptyRequestException("Empty request.")
 
-        if (displayName != null) user.displayName = displayName
         if (location != null) user.location = location
         if (userTitle != null) user.userTitle = userTitle
         if (aboutMe != null) user.aboutMe = aboutMe

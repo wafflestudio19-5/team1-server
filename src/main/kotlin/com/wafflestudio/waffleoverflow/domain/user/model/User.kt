@@ -46,8 +46,6 @@ class User(
 
     var githubLink: String? = null,
 
-    var displayName: String? = null,
-
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var questions: MutableList<Question> = mutableListOf(),
 
