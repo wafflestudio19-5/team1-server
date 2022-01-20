@@ -28,9 +28,9 @@ class UserService(
     private val s3Utils: S3Utils
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
-        existEmailAndUsername(signupRequest.email, signupRequest.username)
         if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormat()
         if (!checkUsernameLength(signupRequest.username)) throw TooLongUsername()
+        existEmailAndUsername(signupRequest.email, signupRequest.username)
         val user: User?
         val email = signupRequest.email
         val username = signupRequest.username
