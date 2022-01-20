@@ -171,23 +171,13 @@ class QuestionController(
         return questionService.acceptAnswer(user, question, answer)
     }
 
-    @GetMapping("/search/title/{keyword}/")
+    @GetMapping("/search/{keyword}/")
     @ResponseStatus(HttpStatus.OK)
-    fun searchQuestionsByTitle(
+    fun searchQuestions(
         @PageableDefault(size = 15)
         pageable: Pageable,
-        @PathVariable keyword: String?,
+        @PathVariable keyword: String,
     ): Page<QuestionDto.Response>? {
-        return questionRepository.findQuestionsByTitleContaining(keyword, pageable)?.map { QuestionDto.Response(it) }
-    }
-
-    @GetMapping("/search/content/{keyword}/")
-    @ResponseStatus(HttpStatus.OK)
-    fun searchQuestionsByContent(
-        @PageableDefault(size = 15)
-        pageable: Pageable,
-        @PathVariable keyword: String?,
-    ): Page<QuestionDto.Response>? {
-        return questionRepository.findQuestionsByBodyContaining(keyword, pageable)?.map { QuestionDto.Response(it) }
+        return questionRepository.findQuestionsByTitleContainingOrBodyContaining(keyword, keyword, pageable).map { QuestionDto.Response(it) }
     }
 }
