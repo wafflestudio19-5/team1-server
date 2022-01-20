@@ -3,6 +3,7 @@ package com.wafflestudio.waffleoverflow.domain.user.service
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.exception.BadGrantTypeException
 import com.wafflestudio.waffleoverflow.domain.user.exception.EmptyRequestException
+import com.wafflestudio.waffleoverflow.domain.user.exception.InvalidEmailFormat
 import com.wafflestudio.waffleoverflow.domain.user.exception.TooLongUsername
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserNotFoundException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsException
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
+import java.util.regex.Pattern
 
 @Service
 @Transactional
@@ -28,6 +30,7 @@ class UserService(
     fun signup(signupRequest: UserDto.SignupRequest): User {
         if (userRepository.existsUserByUsername(signupRequest.username)) throw UserAlreadyExistsException()
         if (userRepository.existsUserByEmail(signupRequest.email)) throw UserAlreadyExistsException()
+        if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormat()
         if (!checkUsernameLength(signupRequest.username)) throw TooLongUsername()
         val user: User?
         val email = signupRequest.email
@@ -65,6 +68,17 @@ class UserService(
 
     private fun checkUsernameLength(username: String): Boolean {
         return username.length <= 20
+    }
+
+    private fun isEmailValid(email: String): Boolean {
+        return Pattern.compile(
+            "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]|[\\w-]{2,}))@" +
+                "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?" +
+                "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\." +
+                "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?" +
+                "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|" +
+                "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
+        ).matcher(email).matches()
     }
 
     fun editProfileImage(
