@@ -28,8 +28,7 @@ class UserService(
     private val s3Utils: S3Utils
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
-        if (userRepository.existsUserByUsername(signupRequest.username)) throw UserAlreadyExistsException()
-        if (userRepository.existsUserByEmail(signupRequest.email)) throw UserAlreadyExistsException()
+        existEmailAndUsername(signupRequest.email, signupRequest.username)
         if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormat()
         if (!checkUsernameLength(signupRequest.username)) throw TooLongUsername()
         val user: User?
@@ -79,6 +78,11 @@ class UserService(
                 "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|" +
                 "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
         ).matcher(email).matches()
+    }
+
+    private fun existEmailAndUsername(email: String, username: String) {
+        if (userRepository.existsUserByUsername(username) || userRepository.existsUserByEmail(email))
+            throw UserAlreadyExistsException()
     }
 
     fun editProfileImage(
