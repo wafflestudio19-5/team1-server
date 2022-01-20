@@ -6,5 +6,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface QuestionRepository : JpaRepository<Question, Long?> {
-    fun findQuestionByTitleContaining(str: String?, pageable: Pageable): Page<Question>?
+    fun findQuestionsByTitleContaining(str: String?, pageable: Pageable): Page<Question>?
+    fun findQuestionsByBodyContaining(str: String?, pageable: Pageable): Page<Question>?
 }
