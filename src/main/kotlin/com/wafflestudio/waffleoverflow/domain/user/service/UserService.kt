@@ -4,6 +4,7 @@ import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.exception.BadGrantTypeException
 import com.wafflestudio.waffleoverflow.domain.user.exception.EmptyRequestException
 import com.wafflestudio.waffleoverflow.domain.user.exception.InvalidEmailFormat
+import com.wafflestudio.waffleoverflow.domain.user.exception.InvalidPasswordFormatException
 import com.wafflestudio.waffleoverflow.domain.user.exception.TooLongUsername
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserNotFoundException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsException
@@ -29,6 +30,7 @@ class UserService(
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
         if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormat()
+        if (!isPasswordFormat(signupRequest.password)) throw InvalidPasswordFormatException()
         if (!checkUsernameLength(signupRequest.username)) throw TooLongUsername()
         existEmailAndUsername(signupRequest.email, signupRequest.username)
         val user: User?
@@ -78,6 +80,13 @@ class UserService(
                 "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|" +
                 "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
         ).matcher(email).matches()
+    }
+
+    private fun isPasswordFormat(password: String): Boolean {
+        return password.matches(
+            "^(?=.*[a-zA-Z0-9])(?=.*[a-zA-Z!@#\$%^&*])(?=.*[0-9!@#\$%^&*]).{6,15}\$"
+                .toRegex()
+        )
     }
 
     private fun existEmailAndUsername(email: String, username: String) {
