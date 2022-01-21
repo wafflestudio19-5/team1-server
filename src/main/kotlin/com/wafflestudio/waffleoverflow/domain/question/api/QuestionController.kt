@@ -176,8 +176,9 @@ class QuestionController(
     fun searchQuestions(
         @PageableDefault(size = 15)
         pageable: Pageable,
-        @PathVariable keyword: String?,
+        @PathVariable keyword: String,
     ): Page<QuestionDto.Response>? {
-        return questionRepository.findQuestionByTitleContaining(keyword, pageable)?.map { QuestionDto.Response(it) }
+        return questionRepository.findQuestionsByTitleContainingOrBodyContaining(keyword, keyword, pageable)
+            .map { QuestionDto.Response(it) }
     }
 }
