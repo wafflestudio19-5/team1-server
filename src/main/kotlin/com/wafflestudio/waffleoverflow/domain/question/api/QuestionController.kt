@@ -1,6 +1,7 @@
 package com.wafflestudio.waffleoverflow.domain.question.api
 
 import com.wafflestudio.waffleoverflow.domain.answer.dto.AnswerDto
+import com.wafflestudio.waffleoverflow.domain.answer.repository.AnswerRepository
 import com.wafflestudio.waffleoverflow.domain.answer.service.AnswerService
 import com.wafflestudio.waffleoverflow.domain.comment.dto.CommentDto
 import com.wafflestudio.waffleoverflow.domain.comment.service.CommentService
@@ -33,6 +34,7 @@ class QuestionController(
     private val questionService: QuestionService,
     private val questionRepository: QuestionRepository,
     private val answerService: AnswerService,
+    private val answerRepository: AnswerRepository,
     private val commentService: CommentService,
     private val voteService: VoteService
 ) {
@@ -135,6 +137,16 @@ class QuestionController(
         val comment = commentService.findById(comment_id)
         commentService.deleteComment(comment, user)
         return CommentDto.Response(comment)
+    }
+
+    @GetMapping("/{question_id}/answer/")
+    @ResponseStatus(HttpStatus.OK)
+    fun getAnswers(
+        @PathVariable question_id: Long,
+        @PageableDefault(size = 15)
+        pageable: Pageable
+    ): Page<AnswerDto.Response> {
+        return answerRepository.findAnswersByQuestionIdEquals(question_id, pageable).map { AnswerDto.Response(it) }
     }
 
     @PostMapping("/{question_id}/answer/")
