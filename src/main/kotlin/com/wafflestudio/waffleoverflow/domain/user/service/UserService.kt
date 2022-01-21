@@ -30,9 +30,11 @@ class UserService(
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
         if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormat()
-        if (!isPasswordFormat(signupRequest.password)) throw InvalidPasswordFormatException()
+        if (!isPasswordValid(signupRequest.password)) throw InvalidPasswordFormatException()
         if (!checkUsernameLength(signupRequest.username)) throw TooLongUsername()
-        existEmailAndUsername(signupRequest.email, signupRequest.username)
+        if (userRepository.existsUserByUsername(signupRequest.username) ||
+            userRepository.existsUserByEmail(signupRequest.email)
+        ) throw throw UserAlreadyExistsException()
         val user: User?
         val email = signupRequest.email
         val username = signupRequest.username
@@ -82,16 +84,11 @@ class UserService(
         ).matcher(email).matches()
     }
 
-    private fun isPasswordFormat(password: String): Boolean {
+    private fun isPasswordValid(password: String): Boolean {
         return password.matches(
             "^(?=.*[a-zA-Z0-9])(?=.*[a-zA-Z!@#\$%^&*])(?=.*[0-9!@#\$%^&*]).{6,15}\$"
                 .toRegex()
         )
-    }
-
-    private fun existEmailAndUsername(email: String, username: String) {
-        if (userRepository.existsUserByUsername(username) || userRepository.existsUserByEmail(email))
-            throw UserAlreadyExistsException()
     }
 
     fun editProfileImage(
