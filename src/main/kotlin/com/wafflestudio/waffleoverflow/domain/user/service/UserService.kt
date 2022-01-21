@@ -3,9 +3,9 @@ package com.wafflestudio.waffleoverflow.domain.user.service
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.exception.BadGrantTypeException
 import com.wafflestudio.waffleoverflow.domain.user.exception.EmptyRequestException
-import com.wafflestudio.waffleoverflow.domain.user.exception.InvalidEmailFormat
+import com.wafflestudio.waffleoverflow.domain.user.exception.InvalidEmailFormatException
 import com.wafflestudio.waffleoverflow.domain.user.exception.InvalidPasswordFormatException
-import com.wafflestudio.waffleoverflow.domain.user.exception.TooLongUsername
+import com.wafflestudio.waffleoverflow.domain.user.exception.TooLongUsernameException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserNotFoundException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserAlreadyExistsException
 import com.wafflestudio.waffleoverflow.domain.user.exception.UserSignUpBadRequestException
@@ -29,9 +29,9 @@ class UserService(
     private val s3Utils: S3Utils
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
-        if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormat()
+        if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormatException()
         if (!isPasswordValid(signupRequest.password)) throw InvalidPasswordFormatException()
-        if (!checkUsernameLength(signupRequest.username)) throw TooLongUsername()
+        if (!checkUsernameLength(signupRequest.username)) throw TooLongUsernameException()
         if (userRepository.existsUserByUsername(signupRequest.username) ||
             userRepository.existsUserByEmail(signupRequest.email)
         ) throw throw UserAlreadyExistsException()
