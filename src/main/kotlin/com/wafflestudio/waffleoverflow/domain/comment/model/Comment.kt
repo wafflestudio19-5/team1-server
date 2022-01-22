@@ -4,6 +4,7 @@ import com.wafflestudio.waffleoverflow.domain.answer.model.Answer
 import com.wafflestudio.waffleoverflow.domain.model.BaseTimeEntity
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.user.model.User
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.ManyToOne
@@ -17,6 +18,7 @@ class Comment(
     val user: User,
 
     @NotBlank
+    @Column(columnDefinition = "LONGTEXT")
     var body: String,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [])
