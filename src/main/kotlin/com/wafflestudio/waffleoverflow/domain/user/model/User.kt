@@ -6,7 +6,6 @@ import com.wafflestudio.waffleoverflow.domain.model.BaseEntity
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
 import com.wafflestudio.waffleoverflow.domain.comment.model.Comment
-import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -46,15 +45,15 @@ class User(
 
     var githubLink: String? = null,
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
     var questions: MutableList<Question> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
     var answers: MutableList<Answer> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
     var votes: MutableList<Vote> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
     var comments: MutableList<Comment> = mutableListOf(),
 ) : BaseEntity()

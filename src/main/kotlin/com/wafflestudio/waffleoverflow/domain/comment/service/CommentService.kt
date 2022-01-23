@@ -81,8 +81,8 @@ class CommentService(
     private fun checkCommentLength(
         body: String
     ) {
-        if (body.length >= 250) {
-            throw TooLongCommentException("Comment is longer than 250 characters")
+        if (body.length > 600) {
+            throw TooLongCommentException("Comment length exceeds 600 characters")
         }
     }
 }

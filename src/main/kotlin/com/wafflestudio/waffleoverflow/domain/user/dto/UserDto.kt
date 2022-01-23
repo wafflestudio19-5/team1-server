@@ -61,6 +61,9 @@ class UserDto {
     )
 
     data class EditProfileRequest(
+        @field:NotBlank
+        val displayName: String, // same as username is User model
+
         val location: String?,
         val userTitle: String?,
         val aboutMe: String?,

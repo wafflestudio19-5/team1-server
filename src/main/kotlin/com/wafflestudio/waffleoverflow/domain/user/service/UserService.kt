@@ -2,7 +2,6 @@ package com.wafflestudio.waffleoverflow.domain.user.service
 
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.exception.BadGrantTypeException
-import com.wafflestudio.waffleoverflow.domain.user.exception.EmptyRequestException
 import com.wafflestudio.waffleoverflow.domain.user.exception.InvalidEmailFormatException
 import com.wafflestudio.waffleoverflow.domain.user.exception.InvalidPasswordFormatException
 import com.wafflestudio.waffleoverflow.domain.user.exception.TooLongUsernameException
@@ -107,19 +106,19 @@ class UserService(
         user: User,
         editProfileRequest: UserDto.EditProfileRequest,
     ): User {
+        val displayName = editProfileRequest.displayName
         val location = editProfileRequest.location
         val userTitle = editProfileRequest.userTitle
         val aboutMe = editProfileRequest.aboutMe
         val websiteLink = editProfileRequest.websiteLink
         val githubLink = editProfileRequest.githubLink
 
-        if (location == null &&
-            userTitle == null &&
-            aboutMe == null &&
-            websiteLink == null &&
-            githubLink == null
-        ) throw EmptyRequestException("Empty request.")
+        if (!checkUsernameLength(editProfileRequest.displayName))
+            throw TooLongUsernameException()
+        if (userRepository.existsUserByUsername(editProfileRequest.displayName))
+            throw throw UserAlreadyExistsException()
 
+        user.username = displayName
         if (location != null) user.location = location
         if (userTitle != null) user.userTitle = userTitle
         if (aboutMe != null) user.aboutMe = aboutMe
