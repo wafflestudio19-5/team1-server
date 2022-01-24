@@ -23,7 +23,7 @@ class User(
     @field:NotBlank
     var username: String,
 
-    @Column
+    @field:NotBlank
     var password: String? = null,
 
     @JsonIgnore
