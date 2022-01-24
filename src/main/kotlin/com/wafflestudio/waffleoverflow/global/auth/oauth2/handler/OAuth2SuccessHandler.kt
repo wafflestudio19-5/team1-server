@@ -2,7 +2,6 @@ package com.wafflestudio.waffleoverflow.global.auth.oauth2.handler
 
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.user.repository.UserRepository
-import com.wafflestudio.waffleoverflow.global.auth.SigninAuthenticationFilter
 import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import org.springframework.security.core.Authentication
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -18,7 +17,6 @@ class OAuth2SuccessHandler(
     private val userRepository: UserRepository,
     private val jwtTokenProvider: JwtTokenProvider,
     private val passwordEncoder: PasswordEncoder,
-    private val signinAuthenticationFilter: SigninAuthenticationFilter,
 ) : AuthenticationSuccessHandler {
     override fun onAuthenticationSuccess(
         request: HttpServletRequest?,
@@ -45,8 +43,6 @@ class OAuth2SuccessHandler(
                 )
             )
         }
-
-        signinAuthenticationFilter.attemptAuthentication(request, response)
 
         response.contentType = "application/json"
         response.characterEncoding = "utf-8"
