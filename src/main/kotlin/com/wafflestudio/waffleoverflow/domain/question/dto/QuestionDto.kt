@@ -20,7 +20,7 @@ class QuestionDto {
         val tags: List<TagDto.Response>,
         val answers: List<AnswerDto.Response>,
         val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime
+        val editedAt: LocalDateTime
     ) {
         constructor(question: Question) : this(
             question.id,
@@ -32,7 +32,7 @@ class QuestionDto {
             question.questionTags.map { TagDto.Response(it.tag) },
             question.answers.map { AnswerDto.Response(it) },
             question.createdAt!!,
-            question.updatedAt!!
+            question.editedAt
         )
     }
 
