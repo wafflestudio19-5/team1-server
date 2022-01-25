@@ -36,14 +36,15 @@ class OAuth2SuccessHandler(
                 User(
                     email = email,
                     username = username,
-                    accessToken = accessToken
+                    accessToken = accessToken,
                 )
             )
         }
 
         response.contentType = "application/json"
         response.characterEncoding = "utf-8"
-        response.addHeader("Authentication", accessToken)
+        // response.addHeader("Authentication", accessToken)
+        response.addHeader("Location", "https://www.waffleoverflow.shop/social?token=$accessToken")
         response.writer.write("{\"accessToken\" : " + "\"" + accessToken + "\"" + "}")
         response.status = HttpServletResponse.SC_TEMPORARY_REDIRECT
     }

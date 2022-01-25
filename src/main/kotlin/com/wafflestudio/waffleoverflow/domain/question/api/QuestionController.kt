@@ -1,6 +1,7 @@
 package com.wafflestudio.waffleoverflow.domain.question.api
 
 import com.wafflestudio.waffleoverflow.domain.answer.dto.AnswerDto
+import com.wafflestudio.waffleoverflow.domain.answer.repository.AnswerRepository
 import com.wafflestudio.waffleoverflow.domain.answer.service.AnswerService
 import com.wafflestudio.waffleoverflow.domain.comment.dto.CommentDto
 import com.wafflestudio.waffleoverflow.domain.comment.service.CommentService
@@ -33,6 +34,7 @@ class QuestionController(
     private val questionService: QuestionService,
     private val questionRepository: QuestionRepository,
     private val answerService: AnswerService,
+    private val answerRepository: AnswerRepository,
     private val commentService: CommentService,
     private val voteService: VoteService
 ) {
@@ -137,6 +139,16 @@ class QuestionController(
         return CommentDto.Response(comment)
     }
 
+    @GetMapping("/{question_id}/answer/")
+    @ResponseStatus(HttpStatus.OK)
+    fun getAnswers(
+        @PathVariable question_id: Long,
+        @PageableDefault(size = 15)
+        pageable: Pageable
+    ): Page<AnswerDto.Response> {
+        return answerRepository.findAnswersByQuestionIdEquals(question_id, pageable).map { AnswerDto.Response(it) }
+    }
+
     @PostMapping("/{question_id}/answer/")
     @ResponseStatus(HttpStatus.CREATED)
     fun addAnswer(
@@ -167,7 +179,7 @@ class QuestionController(
         @PathVariable answer_id: Long,
     ): QuestionDto.Response {
         val question = questionService.findById(question_id)
-        val answer = answerService.findById((answer_id))
+        val answer = answerService.findById(answer_id)
         return questionService.acceptAnswer(user, question, answer)
     }
 
@@ -176,8 +188,9 @@ class QuestionController(
     fun searchQuestions(
         @PageableDefault(size = 15)
         pageable: Pageable,
-        @PathVariable keyword: String?,
+        @PathVariable keyword: String,
     ): Page<QuestionDto.Response>? {
-        return questionRepository.findQuestionByTitleContaining(keyword, pageable)?.map { QuestionDto.Response(it) }
+        return questionRepository.findQuestionsByTitleContainingOrBodyContaining(keyword, keyword, pageable)
+            .map { QuestionDto.Response(it) }
     }
 }
