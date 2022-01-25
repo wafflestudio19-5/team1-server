@@ -5,6 +5,7 @@ import com.wafflestudio.waffleoverflow.domain.comment.model.Comment
 import com.wafflestudio.waffleoverflow.domain.model.BaseTimeEntity
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
+import java.time.LocalDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -39,4 +40,6 @@ class Question(
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var questionTags: MutableList<QuestionTag> = mutableListOf(),
+
+    var editedAt: LocalDateTime = LocalDateTime.now(),
 ) : BaseTimeEntity()
