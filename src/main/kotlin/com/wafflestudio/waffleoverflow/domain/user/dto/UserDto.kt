@@ -36,7 +36,7 @@ class UserDto {
         )
     }
 
-    data class ResponseSummary(
+    data class SimpleResponse(
         val id: Long,
         val username: String
     ) {

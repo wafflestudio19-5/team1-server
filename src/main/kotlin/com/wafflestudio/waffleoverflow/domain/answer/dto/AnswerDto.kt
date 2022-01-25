@@ -15,7 +15,7 @@ class AnswerDto {
 
     data class Response(
         val id: Long,
-        val user: UserDto.ResponseSummary,
+        val user: UserDto.SimpleResponse,
         val body: String,
         val votes: Int,
         val comments: List<CommentDto.Response>,
@@ -25,7 +25,7 @@ class AnswerDto {
     ) {
         constructor(answer: Answer) : this(
             answer.id,
-            UserDto.ResponseSummary(answer.user),
+            UserDto.SimpleResponse(answer.user),
             answer.body,
             answer.votes.count { it.status == VoteStatus.UP } - answer.votes.count { it.status == VoteStatus.DOWN },
             answer.comments.map { CommentDto.Response(it) },
