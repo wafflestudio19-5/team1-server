@@ -2,8 +2,12 @@ package com.wafflestudio.waffleoverflow.domain.user.api
 
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.model.User
+import com.wafflestudio.waffleoverflow.domain.user.repository.UserRepository
 import com.wafflestudio.waffleoverflow.domain.user.service.UserService
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -28,7 +32,17 @@ import javax.validation.Valid
 @RequestMapping("/api/user")
 class UserController(
     private val userService: UserService,
+    private val userRepository: UserRepository
 ) {
+    @GetMapping("/")
+    @ResponseStatus(HttpStatus.OK)
+    fun getUsers(
+        @PageableDefault(size = 36)
+        pageable: Pageable
+    ): Page<UserDto.CardResponse> {
+        return userRepository.findAll(pageable).map { UserDto.CardResponse(it) }
+    }
+
     @PostMapping("/signup/")
     @ResponseStatus(HttpStatus.OK)
     fun signup(

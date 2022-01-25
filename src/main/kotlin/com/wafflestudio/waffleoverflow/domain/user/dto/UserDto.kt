@@ -36,7 +36,23 @@ class UserDto {
         )
     }
 
-    data class ResponseSummary(
+    data class CardResponse(
+        val id: Long,
+        val username: String,
+        val location: String?,
+        val questionCount: Int,
+        val answerCount: Int,
+    ) {
+        constructor(user: User) : this(
+            id = user.id,
+            username = user.username,
+            location = user.location,
+            questionCount = user.questions.count(),
+            answerCount = user.answers.count(),
+        )
+    }
+
+    data class SimpleResponse(
         val id: Long,
         val username: String
     ) {
