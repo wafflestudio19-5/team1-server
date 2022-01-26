@@ -5,7 +5,6 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.s3.model.CannedAccessControlList
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import com.amazonaws.util.IOUtils
@@ -59,7 +58,6 @@ class S3Utils {
 
         amazonS3.putObject(
             PutObjectRequest(bucket, dir + fileName, byteArrayIs, objMeta)
-                .withCannedAcl(CannedAccessControlList.PublicRead)
         )
 
         return amazonS3.getUrl(bucket, dir + fileName).toString()
