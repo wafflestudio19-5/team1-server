@@ -5,6 +5,7 @@ import com.wafflestudio.waffleoverflow.domain.model.BaseTimeEntity
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
+import java.time.LocalDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -34,5 +35,7 @@ class Answer(
     var body: String,
 
     @Column
-    var accepted: Boolean = false
+    var accepted: Boolean = false,
+
+    var editedAt: LocalDateTime? = LocalDateTime.now(),
 ) : BaseTimeEntity()

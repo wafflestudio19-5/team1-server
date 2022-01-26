@@ -9,6 +9,7 @@ import com.wafflestudio.waffleoverflow.domain.user.model.User
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 @Transactional
@@ -26,6 +27,7 @@ class AnswerService(
     ): Answer {
         validateUser(user, answer)
         answer.body = requestBody.body
+        answer.editedAt = LocalDateTime.now()
         return answer
     }
 

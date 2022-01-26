@@ -21,7 +21,7 @@ class AnswerDto {
         val comments: List<CommentDto.Response>,
         val accepted: Boolean,
         val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime
+        val editedAt: LocalDateTime?
     ) {
         constructor(answer: Answer) : this(
             answer.id,
@@ -31,7 +31,7 @@ class AnswerDto {
             answer.comments.map { CommentDto.Response(it) },
             answer.accepted,
             answer.createdAt!!,
-            answer.updatedAt!!
+            answer.editedAt
         )
     }
 
