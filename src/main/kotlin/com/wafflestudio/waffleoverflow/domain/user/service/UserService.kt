@@ -57,7 +57,9 @@ class UserService(
     }
 
     fun deleteMyAccount(user: User) {
-        userRepository.delete(user)
+        val userId = user.id
+        val deleteUser = findUserById(userId)
+        userRepository.delete(deleteUser)
     }
 
     fun findUserById(id: Long): User {
