@@ -22,7 +22,7 @@ class Question(
     val user: User,
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    var answers: MutableList<Answer> = mutableListOf(),
+    var answers: MutableSet<Answer> = mutableSetOf(),
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var votes: MutableList<Vote> = mutableListOf(),

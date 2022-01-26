@@ -45,11 +45,11 @@ class User(
 
     var githubLink: String? = null,
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
-    var questions: MutableList<Question> = mutableListOf(),
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [])
+    var questions: MutableSet<Question> = mutableSetOf(),
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
-    var answers: MutableList<Answer> = mutableListOf(),
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [])
+    var answers: MutableSet<Answer> = mutableSetOf(),
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
     var votes: MutableList<Vote> = mutableListOf(),
