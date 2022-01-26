@@ -41,5 +41,5 @@ class Question(
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var questionTags: MutableList<QuestionTag> = mutableListOf(),
 
-    var editedAt: LocalDateTime = LocalDateTime.now(),
+    var editedAt: LocalDateTime? = LocalDateTime.now(),
 ) : BaseTimeEntity()
