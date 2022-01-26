@@ -96,7 +96,7 @@ class UserService(
     ): User {
         val urlPath = s3Utils.upload(multipartFile)
 
-        user.s3Path = urlPath
+        user.s3Path = urlPath.substring(62)
         userRepository.save(user)
 
         return user
