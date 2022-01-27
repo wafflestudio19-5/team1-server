@@ -27,10 +27,11 @@ class Question(
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var votes: MutableList<Vote> = mutableListOf(),
 
-    var voteCount: Int = 0,
-
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var comments: MutableList<Comment> = mutableListOf(),
+
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var questionTags: MutableList<QuestionTag> = mutableListOf(),
 
     @field:NotBlank
     var title: String,
@@ -38,8 +39,8 @@ class Question(
     @Column(columnDefinition = "LONGTEXT")
     var body: String,
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var questionTags: MutableList<QuestionTag> = mutableListOf(),
+    var voteCount: Int = 0,
 
     var editedAt: LocalDateTime? = LocalDateTime.now(),
+
 ) : BaseTimeEntity()
