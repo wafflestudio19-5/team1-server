@@ -56,11 +56,11 @@ class UserDto {
 
     data class SimpleResponse(
         val id: Long,
-        val username: String
+        val username: String,
     ) {
         constructor(user: User) : this(
             id = user.id,
-            username = user.username
+            username = user.username,
         )
     }
 
