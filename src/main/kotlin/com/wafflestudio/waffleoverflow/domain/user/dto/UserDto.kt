@@ -39,6 +39,7 @@ class UserDto {
     data class CardResponse(
         val id: Long,
         val username: String,
+        val image: String?,
         val location: String?,
         val questionCount: Int,
         val answerCount: Int,
@@ -46,6 +47,7 @@ class UserDto {
         constructor(user: User) : this(
             id = user.id,
             username = user.username,
+            image = user.s3Path,
             location = user.location,
             questionCount = user.questions.count(),
             answerCount = user.answers.count(),
@@ -54,11 +56,13 @@ class UserDto {
 
     data class SimpleResponse(
         val id: Long,
-        val username: String
+        val username: String,
+        val image: String?,
     ) {
         constructor(user: User) : this(
             id = user.id,
-            username = user.username
+            username = user.username,
+            image = user.s3Path,
         )
     }
 
