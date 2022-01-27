@@ -26,6 +26,18 @@ class User(
     @Column
     var password: String? = null,
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [])
+    var questions: MutableSet<Question> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [])
+    var answers: MutableSet<Answer> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
+    var votes: MutableList<Vote> = mutableListOf(),
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
+    var comments: MutableList<Comment> = mutableListOf(),
+
     @JsonIgnore
     val authorities: String = "User",
 
@@ -45,15 +57,4 @@ class User(
 
     var githubLink: String? = null,
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [])
-    var questions: MutableSet<Question> = mutableSetOf(),
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [])
-    var answers: MutableSet<Answer> = mutableSetOf(),
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
-    var votes: MutableList<Vote> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
-    var comments: MutableList<Comment> = mutableListOf(),
 ) : BaseEntity()

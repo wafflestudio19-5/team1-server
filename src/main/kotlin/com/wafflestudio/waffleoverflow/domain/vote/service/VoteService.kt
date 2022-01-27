@@ -2,6 +2,7 @@ package com.wafflestudio.waffleoverflow.domain.vote.service
 
 import com.wafflestudio.waffleoverflow.domain.answer.model.Answer
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
+import com.wafflestudio.waffleoverflow.domain.question.service.QuestionService
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.dto.VoteDto
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
@@ -14,12 +15,14 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class VoteService(
     private val voteRepository: VoteRepository,
+    private val questionService: QuestionService,
 ) {
     fun changeQuestionVote(
         requestBody: VoteDto.Request,
         user: User,
-        question: Question,
+        questionId: Long,
     ): VoteDto.Response {
+        val question = questionService.findById(questionId)
         if (voteExists(user, question, null)) {
             return updateQuestionVote(requestBody, user, question)
         } else {

@@ -32,13 +32,13 @@ import javax.validation.Valid
 @RequestMapping("/api/user")
 class UserController(
     private val userService: UserService,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
     fun getUsers(
         @PageableDefault(size = 36)
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<UserDto.CardResponse> {
         return userRepository.findAll(pageable).map { UserDto.CardResponse(it) }
     }
@@ -47,7 +47,7 @@ class UserController(
     @ResponseStatus(HttpStatus.OK)
     fun signup(
         @Valid @RequestBody signupRequest: UserDto.SignupRequest,
-        response: HttpServletResponse
+        response: HttpServletResponse,
     ): UserDto.Response {
         val user = userService.signup(signupRequest)
         response.addHeader("Authentication", user.accessToken)
@@ -61,7 +61,17 @@ class UserController(
         response: HttpServletResponse,
     ) {
         val auth: Authentication = SecurityContextHolder.getContext().authentication
-        if (auth != null) SecurityContextLogoutHandler().logout(request, response, auth)
+        SecurityContextLogoutHandler().logout(request, response, auth)
+    }
+
+    @GetMapping("/{user_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun findUserById(
+        @PathVariable user_id: Long,
+    ): UserDto.Response {
+        return UserDto.Response(
+            userService.findUserById(user_id)
+        )
     }
 
     @GetMapping("/me/")
@@ -69,17 +79,8 @@ class UserController(
     fun loadUser(
         @CurrentUser user: User,
     ): UserDto.Response {
-        val thisUser = userService.loadUserInfo(user)
-        return UserDto.Response(thisUser)
-    }
-
-    @GetMapping("/{user_id}/")
-    @ResponseStatus(HttpStatus.OK)
-    fun findUserById(
-        @PathVariable user_id: Long
-    ): UserDto.Response {
         return UserDto.Response(
-            userService.findUserById(user_id)
+            userService.loadUserInfo(user)
         )
     }
 
@@ -87,10 +88,11 @@ class UserController(
     @ResponseStatus(HttpStatus.OK)
     fun editProfileImage(
         @CurrentUser user: User,
-        @RequestParam("image") multipartFile: MultipartFile
+        @RequestParam("image") multipartFile: MultipartFile,
     ): UserDto.Response {
-        val thisUser = userService.editProfileImage(user, multipartFile)
-        return UserDto.Response(thisUser)
+        return UserDto.Response(
+            userService.editProfileImage(user, multipartFile)
+        )
     }
 
     @PutMapping("/me/edit/")
@@ -99,8 +101,9 @@ class UserController(
         @CurrentUser user: User,
         @Valid @RequestBody editProfileRequest: UserDto.EditProfileRequest,
     ): UserDto.Response {
-        val editUser = userService.editUserProfile(user, editProfileRequest)
-        return UserDto.Response(editUser)
+        return UserDto.Response(
+            userService.editUserProfile(user, editProfileRequest)
+        )
     }
 
     @DeleteMapping("/me/remove/")

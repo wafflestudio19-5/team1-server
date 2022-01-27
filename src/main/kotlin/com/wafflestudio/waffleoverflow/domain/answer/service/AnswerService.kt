@@ -23,8 +23,9 @@ class AnswerService(
     fun editAnswer(
         requestBody: AnswerDto.Request,
         user: User,
-        answer: Answer
+        answerId: Long,
     ): Answer {
+        val answer = findById(answerId)
         validateUser(user, answer)
         answer.body = requestBody.body
         answer.editedAt = LocalDateTime.now()
@@ -33,17 +34,19 @@ class AnswerService(
 
     fun deleteAnswer(
         user: User,
-        answer: Answer
+        answerId: Long,
     ) {
+        val answer = findById(answerId)
         validateUser(user, answer)
         answerRepository.delete(answer)
     }
 
     private fun validateUser(
         user: User,
-        answer: Answer
+        answer: Answer,
     ) {
-        if (user.id != answer.user.id)
+        if (user.id != answer.user.id) {
             throw UnauthorizedUserException("User $user.id is not the author of answer $answer.id")
+        }
     }
 }
