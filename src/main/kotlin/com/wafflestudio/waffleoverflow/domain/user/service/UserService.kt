@@ -117,8 +117,8 @@ class UserService(
 
         if (!checkUsernameLength(editProfileRequest.displayName))
             throw TooLongUsernameException()
-        if (userRepository.existsUserByUsername(editProfileRequest.displayName))
-            throw throw UserAlreadyExistsException()
+        if (userRepository.existsUserByUsername(editProfileRequest.displayName) && (user.username != displayName))
+            throw UserAlreadyExistsException()
 
         user.username = displayName
         if (location != null) user.location = location
