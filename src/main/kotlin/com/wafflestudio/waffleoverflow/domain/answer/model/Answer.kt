@@ -36,6 +36,6 @@ class Answer(
 
     var accepted: Boolean = false,
 
-    var editedAt: LocalDateTime? = LocalDateTime.now(),
+    var editedAt: LocalDateTime? = null,
 
 ) : BaseTimeEntity()
