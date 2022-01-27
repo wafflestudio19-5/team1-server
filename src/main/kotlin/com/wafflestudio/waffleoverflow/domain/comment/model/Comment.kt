@@ -17,13 +17,19 @@ class Comment(
     @ManyToOne(fetch = FetchType.LAZY, cascade = [])
     val user: User,
 
-    @NotBlank
-    @Column(columnDefinition = "LONGTEXT")
-    var body: String,
+    /**
+     * Important: Either question or answer must be null.
+     * (Both cannot exist simultaneously for a single comment)
+     **/
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [])
     val question: Question? = null,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [])
     val answer: Answer? = null,
+
+    @NotBlank
+    @Column(columnDefinition = "LONGTEXT")
+    var body: String,
+
 ) : BaseTimeEntity()

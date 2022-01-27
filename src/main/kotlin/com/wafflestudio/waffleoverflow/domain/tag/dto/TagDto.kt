@@ -11,7 +11,7 @@ class TagDto {
         constructor(tag: Tag) : this(
             tag.id,
             tag.name,
-            tag.intro
+            tag.intro,
         )
     }
 }

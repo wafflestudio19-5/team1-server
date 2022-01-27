@@ -2,7 +2,6 @@ package com.wafflestudio.waffleoverflow.domain.question.api
 
 import com.wafflestudio.waffleoverflow.domain.answer.dto.AnswerDto
 import com.wafflestudio.waffleoverflow.domain.answer.repository.AnswerRepository
-import com.wafflestudio.waffleoverflow.domain.answer.service.AnswerService
 import com.wafflestudio.waffleoverflow.domain.comment.dto.CommentDto
 import com.wafflestudio.waffleoverflow.domain.comment.service.CommentService
 import com.wafflestudio.waffleoverflow.domain.question.dto.QuestionDto
@@ -33,16 +32,15 @@ import javax.validation.Valid
 class QuestionController(
     private val questionService: QuestionService,
     private val questionRepository: QuestionRepository,
-    private val answerService: AnswerService,
     private val answerRepository: AnswerRepository,
     private val commentService: CommentService,
-    private val voteService: VoteService
+    private val voteService: VoteService,
 ) {
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
     fun getQuestions(
         @PageableDefault(size = 15)
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<QuestionDto.Response> {
         return questionRepository.findAll(pageable).map { QuestionDto.Response(it) }
     }
@@ -51,7 +49,7 @@ class QuestionController(
     @ResponseStatus(HttpStatus.CREATED)
     fun addQuestion(
         @Valid @RequestBody requestBody: QuestionDto.Request,
-        @CurrentUser user: User
+        @CurrentUser user: User,
     ): QuestionDto.Response {
         return QuestionDto.Response(
             questionService.addQuestion(requestBody, user)
@@ -61,7 +59,7 @@ class QuestionController(
     @GetMapping("/{question_id}/")
     @ResponseStatus(HttpStatus.OK)
     fun getQuestion(
-        @PathVariable question_id: Long
+        @PathVariable question_id: Long,
     ): QuestionDto.Response {
         return QuestionDto.Response(
             questionService.findById(question_id)
@@ -75,9 +73,8 @@ class QuestionController(
         @Valid @RequestBody requestBody: QuestionDto.Request,
         @PathVariable question_id: Long,
     ): QuestionDto.Response {
-        val question = questionService.findById(question_id)
         return QuestionDto.Response(
-            questionService.editQuestion(requestBody, user, question)
+            questionService.editQuestion(requestBody, user, question_id)
         )
     }
 
@@ -85,7 +82,7 @@ class QuestionController(
     @ResponseStatus(HttpStatus.OK)
     fun deleteQuestion(
         @CurrentUser user: User,
-        @PathVariable question_id: Long
+        @PathVariable question_id: Long,
     ): QuestionDto.Response {
         val question = questionService.findById(question_id)
         questionService.deleteQuestion(user, question)
@@ -95,7 +92,7 @@ class QuestionController(
     @GetMapping("/{question_id}/comment/")
     @ResponseStatus(HttpStatus.OK)
     fun getComments(
-        @PathVariable question_id: Long
+        @PathVariable question_id: Long,
     ): ListResponse<CommentDto.Response> {
         return ListResponse(
             questionService.findById(question_id).comments.map { CommentDto.Response(it) }
@@ -107,7 +104,7 @@ class QuestionController(
     fun addComment(
         @CurrentUser user: User,
         @PathVariable question_id: Long,
-        @Valid @RequestBody requestBody: CommentDto.Request
+        @Valid @RequestBody requestBody: CommentDto.Request,
     ): CommentDto.Response {
         val question = questionService.findById(question_id)
         return CommentDto.Response(
@@ -115,36 +112,12 @@ class QuestionController(
         )
     }
 
-    @PutMapping("/comment/{comment_id}/")
-    @ResponseStatus(HttpStatus.OK)
-    fun editComment(
-        @CurrentUser user: User,
-        @PathVariable comment_id: Long,
-        @Valid @RequestBody requestBody: CommentDto.Request,
-    ): CommentDto.Response {
-        val comment = commentService.findById(comment_id)
-        return CommentDto.Response(
-            commentService.editComment(requestBody, comment, user)
-        )
-    }
-
-    @DeleteMapping("/comment/{comment_id}/")
-    @ResponseStatus(HttpStatus.OK)
-    fun deleteComment(
-        @CurrentUser user: User,
-        @PathVariable comment_id: Long
-    ): CommentDto.Response {
-        val comment = commentService.findById(comment_id)
-        commentService.deleteComment(comment, user)
-        return CommentDto.Response(comment)
-    }
-
     @GetMapping("/{question_id}/answer/")
     @ResponseStatus(HttpStatus.OK)
     fun getAnswers(
         @PathVariable question_id: Long,
         @PageableDefault(size = 15)
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<AnswerDto.Response> {
         return answerRepository.findAnswersByQuestionIdEquals(question_id, pageable).map { AnswerDto.Response(it) }
     }
@@ -154,10 +127,9 @@ class QuestionController(
     fun addAnswer(
         @CurrentUser user: User,
         @PathVariable question_id: Long,
-        @Valid @RequestBody requestBody: AnswerDto.Request
+        @Valid @RequestBody requestBody: AnswerDto.Request,
     ): AnswerDto.Response {
-        val question = questionService.findById(question_id)
-        return questionService.addAnswer(requestBody, user, question)
+        return questionService.addAnswer(requestBody, user, question_id)
     }
 
     @PostMapping("/{question_id}/vote/")
@@ -165,10 +137,9 @@ class QuestionController(
     fun addVote(
         @CurrentUser user: User,
         @PathVariable question_id: Long,
-        @Valid @RequestBody requestBody: VoteDto.Request
+        @Valid @RequestBody requestBody: VoteDto.Request,
     ): VoteDto.Response {
-        val question = questionService.findById(question_id)
-        return voteService.changeQuestionVote(requestBody, user, question)
+        return voteService.changeQuestionVote(requestBody, user, question_id)
     }
 
     @PostMapping("/{question_id}/{answer_id}/accept/")
@@ -178,9 +149,30 @@ class QuestionController(
         @PathVariable question_id: Long,
         @PathVariable answer_id: Long,
     ): QuestionDto.Response {
-        val question = questionService.findById(question_id)
-        val answer = answerService.findById(answer_id)
-        return questionService.acceptAnswer(user, question, answer)
+        return questionService.acceptAnswer(user, question_id, answer_id)
+    }
+
+    @PutMapping("/comment/{comment_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun editComment(
+        @CurrentUser user: User,
+        @PathVariable comment_id: Long,
+        @Valid @RequestBody requestBody: CommentDto.Request,
+    ): CommentDto.Response {
+        return CommentDto.Response(
+            commentService.editComment(requestBody, comment_id, user)
+        )
+    }
+
+    @DeleteMapping("/comment/{comment_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteComment(
+        @CurrentUser user: User,
+        @PathVariable comment_id: Long,
+    ): CommentDto.Response {
+        val comment = commentService.findById(comment_id)
+        commentService.deleteComment(comment, user)
+        return CommentDto.Response(comment)
     }
 
     @GetMapping("/search/{keyword}/")

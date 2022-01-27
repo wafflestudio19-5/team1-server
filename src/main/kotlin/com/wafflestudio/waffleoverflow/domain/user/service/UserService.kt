@@ -28,12 +28,13 @@ class UserService(
     private val s3Utils: S3Utils
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
-        if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormatException()
+        if (!isEmailValid(signupRequest.email))throw InvalidEmailFormatException()
         if (!isPasswordValid(signupRequest.password)) throw InvalidPasswordFormatException()
         if (!checkUsernameLength(signupRequest.username)) throw TooLongUsernameException()
         if (userRepository.existsUserByUsername(signupRequest.username) ||
             userRepository.existsUserByEmail(signupRequest.email)
-        ) throw throw UserAlreadyExistsException()
+        ) throw UserAlreadyExistsException()
+
         val user: User?
         val email = signupRequest.email
         val username = signupRequest.username
@@ -44,7 +45,7 @@ class UserService(
         when (grantType) {
             // Oauth 영역 추가 예정
             "PASSWORD" -> {
-                if (email == null || signupRequest.password == null || signupRequest.password == "") {
+                if (signupRequest.password == "") {
                     throw UserSignUpBadRequestException()
                 }
                 user = User(email, username, encodedPassword, accessToken = accessToken)
@@ -56,18 +57,17 @@ class UserService(
         return userRepository.save(user)
     }
 
-    fun deleteMyAccount(user: User) {
-        val userId = user.id
-        val deleteUser = findUserById(userId)
-        userRepository.delete(deleteUser)
-    }
-
     fun findUserById(id: Long): User {
         return userRepository.findByIdOrNull(id) ?: throw UserNotFoundException("User $id does not exist")
     }
 
     fun loadUserInfo(user: User): User {
         return userRepository.findByEmail(user.email) ?: throw UserNotFoundException()
+    }
+
+    fun deleteMyAccount(user: User) {
+        val deleteUser = findUserById(user.id)
+        userRepository.delete(deleteUser)
     }
 
     private fun checkUsernameLength(username: String): Boolean {
@@ -97,10 +97,9 @@ class UserService(
         multipartFile: MultipartFile
     ): User {
         val urlPath = s3Utils.upload(multipartFile)
-
         user.s3Path = urlPath.substring(62)
-        userRepository.save(user)
 
+        userRepository.save(user)
         return user
     }
 
