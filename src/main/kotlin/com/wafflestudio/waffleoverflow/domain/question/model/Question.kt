@@ -41,6 +41,6 @@ class Question(
 
     var voteCount: Int = 0,
 
-    var editedAt: LocalDateTime? = LocalDateTime.now(),
+    var editedAt: LocalDateTime? = null,
 
 ) : BaseTimeEntity()
