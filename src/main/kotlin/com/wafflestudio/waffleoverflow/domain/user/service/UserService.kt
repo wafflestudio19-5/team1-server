@@ -66,8 +66,26 @@ class UserService(
     }
 
     fun deleteMyAccount(user: User) {
-        val deleteUser = findUserById(user.id)
-        userRepository.delete(deleteUser)
+        var randomName = "user" + (10000000..99999999).random().toString()
+        var randomEmail = "$randomName@email.com"
+        while (userRepository.existsUserByUsername(randomName) &&
+            userRepository.existsUserByEmail(randomEmail)
+        ) {
+            randomName = "user" + (10000000..99999999).random().toString()
+            randomEmail = "$randomName@email.com"
+        }
+
+        user.username = randomName
+        user.email = randomEmail
+        user.s3Path = null
+        user.location = null
+        user.userTitle = null
+        user.aboutMe = null
+        user.websiteLink = null
+        user.githubLink = null
+        user.isDeleted = true
+
+        userRepository.save(user)
     }
 
     private fun checkUsernameLength(username: String): Boolean {
