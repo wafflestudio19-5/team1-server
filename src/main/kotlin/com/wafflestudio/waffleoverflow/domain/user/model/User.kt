@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank
 class User(
     @Column(unique = true)
     @field:NotBlank
-    val email: String,
+    var email: String,
 
     @field:NotBlank
     var username: String,
@@ -56,5 +56,7 @@ class User(
     var websiteLink: String? = null,
 
     var githubLink: String? = null,
+
+    var isDeleted: Boolean = false,
 
 ) : BaseEntity()
