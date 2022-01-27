@@ -34,6 +34,20 @@ class CommentService(
         answer: Answer,
     ) = addComment(requestBody, user, null, answer)
 
+    private fun addComment(
+        requestBody: CommentDto.Request,
+        user: User,
+        question: Question?,
+        answer: Answer?,
+    ): Comment {
+        val body = requestBody.body
+        checkCommentLength(body)
+
+        val comment = Comment(user, question, answer, body)
+        commentRepository.save(comment)
+        return comment
+    }
+
     fun editComment(
         requestBody: CommentDto.Request,
         commentId: Long,
@@ -56,20 +70,6 @@ class CommentService(
     ) {
         validateUser(user, comment)
         commentRepository.delete(comment)
-    }
-
-    private fun addComment(
-        requestBody: CommentDto.Request,
-        user: User,
-        question: Question?,
-        answer: Answer?,
-    ): Comment {
-        val body = requestBody.body
-        checkCommentLength(body)
-
-        val comment = Comment(user, question, answer, body)
-        commentRepository.save(comment)
-        return comment
     }
 
     private fun validateUser(
