@@ -26,16 +26,16 @@ class Answer(
     @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var votes: MutableList<Vote> = mutableListOf(),
 
-    var voteCount: Int = 0,
-
     @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var comments: MutableList<Comment> = mutableListOf(),
 
     @Column(columnDefinition = "LONGTEXT")
     var body: String,
 
-    @Column
+    var voteCount: Int = 0,
+
     var accepted: Boolean = false,
 
     var editedAt: LocalDateTime? = LocalDateTime.now(),
+
 ) : BaseTimeEntity()

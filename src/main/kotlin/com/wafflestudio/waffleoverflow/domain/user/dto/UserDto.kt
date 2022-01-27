@@ -41,6 +41,7 @@ class UserDto {
         val username: String,
         val image: String?,
         val location: String?,
+        val image: String?,
         val questionCount: Int,
         val answerCount: Int,
     ) {
@@ -49,6 +50,7 @@ class UserDto {
             username = user.username,
             image = user.s3Path,
             location = user.location,
+            image = user.s3Path,
             questionCount = user.questions.count(),
             answerCount = user.answers.count(),
         )

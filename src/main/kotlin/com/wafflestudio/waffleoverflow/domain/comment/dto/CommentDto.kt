@@ -13,7 +13,7 @@ class CommentDto {
         val questionId: Long?,
         val answerId: Long?,
         val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime
+        val updatedAt: LocalDateTime,
     ) {
         constructor(comment: Comment) : this(
             comment.id,
@@ -22,12 +22,12 @@ class CommentDto {
             comment.question?.id,
             comment.answer?.id,
             comment.createdAt!!,
-            comment.updatedAt!!
+            comment.updatedAt!!,
         )
     }
 
     data class Request(
         @NotBlank
-        val body: String
+        val body: String,
     )
 }
