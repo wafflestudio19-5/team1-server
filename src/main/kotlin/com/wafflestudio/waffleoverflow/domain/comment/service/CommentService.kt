@@ -11,10 +11,12 @@ import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class CommentService(
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
 ) {
     fun findById(id: Long): Comment {
         return commentRepository.findByIdOrNull(id) ?: throw CommentNotFoundException("Comment $id does not exist")
@@ -34,9 +36,10 @@ class CommentService(
 
     fun editComment(
         requestBody: CommentDto.Request,
-        comment: Comment,
+        commentId: Long,
         user: User,
     ): Comment {
+        val comment = findById(commentId)
         validateUser(user, comment)
 
         val body = requestBody.body
@@ -44,13 +47,12 @@ class CommentService(
 
         comment.body = body
         commentRepository.save(comment)
-
         return comment
     }
 
     fun deleteComment(
         comment: Comment,
-        user: User
+        user: User,
     ) {
         validateUser(user, comment)
         commentRepository.delete(comment)
@@ -64,14 +66,15 @@ class CommentService(
     ): Comment {
         val body = requestBody.body
         checkCommentLength(body)
-        val comment = Comment(user, body, question, answer)
+
+        val comment = Comment(user, question, answer, body)
         commentRepository.save(comment)
         return comment
     }
 
     private fun validateUser(
         user: User,
-        comment: Comment
+        comment: Comment,
     ) {
         if (user.id != comment.user.id) {
             throw NotCommentAuthorException("User $user.id is not the author of comment $comment.id")
@@ -79,7 +82,7 @@ class CommentService(
     }
 
     private fun checkCommentLength(
-        body: String
+        body: String,
     ) {
         if (body.length > 600) {
             throw TooLongCommentException("Comment length exceeds 600 characters")
