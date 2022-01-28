@@ -40,7 +40,7 @@ class UserController(
         @PageableDefault(size = 36)
         pageable: Pageable,
     ): Page<UserDto.CardResponse> {
-        return userRepository.findAll(pageable).map { UserDto.CardResponse(it) }
+        return userRepository.findAllByDeletedIsFalse(pageable).map { UserDto.CardResponse(it) }
     }
 
     @PostMapping("/signup/")
@@ -111,6 +111,6 @@ class UserController(
     fun deleteAccount(
         @CurrentUser user: User,
     ) {
-        userService.deleteMyAccount(user)
+        userService.deleteAccount(user)
     }
 }

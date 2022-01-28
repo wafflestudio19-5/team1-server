@@ -8,7 +8,6 @@ import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.question.repository.QuestionRepository
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.user.repository.UserRepository
-import com.wafflestudio.waffleoverflow.domain.vote.repository.VoteRepository
 import com.wafflestudio.waffleoverflow.global.auth.jwt.JwtTokenProvider
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
@@ -22,7 +21,6 @@ class DataLoader(
     private val questionRepository: QuestionRepository,
     private val answerRepository: AnswerRepository,
     private val commentRepository: CommentRepository,
-    private val voteRepository: VoteRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 ) : ApplicationRunner {
     override fun run(args: ApplicationArguments?) {

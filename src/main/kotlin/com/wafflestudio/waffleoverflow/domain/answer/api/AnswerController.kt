@@ -104,7 +104,6 @@ class AnswerController(
         @PathVariable answer_id: Long,
         @Valid @RequestBody requestBody: VoteDto.Request,
     ): VoteDto.Response {
-        val answer = answerService.findById(answer_id)
-        return voteService.changeAnswerVote(requestBody, user, answer)
+        return voteService.changeAnswerVote(requestBody, user, answer_id)
     }
 }

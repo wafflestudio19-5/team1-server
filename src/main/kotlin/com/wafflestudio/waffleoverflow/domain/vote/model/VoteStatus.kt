@@ -11,5 +11,5 @@ enum class VoteStatus {
 
     DOWN {
         override fun toString() = "Down"
-    }
+    },
 }
