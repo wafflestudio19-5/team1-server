@@ -77,7 +77,7 @@ class UserService(
 
         user.username = randomName
         user.email = randomEmail
-        user.s3Path = null
+        user.s3ObjectKey = null
         user.location = null
         user.userTitle = null
         user.aboutMe = null
@@ -114,8 +114,11 @@ class UserService(
         user: User,
         multipartFile: MultipartFile
     ): User {
-        val urlPath = s3Utils.upload(multipartFile)
-        user.s3Path = urlPath.substring(62)
+        user.s3ObjectKey?.let {
+            s3Utils.delete(user.s3ObjectKey)
+        }
+
+        user.s3ObjectKey = s3Utils.upload(multipartFile)
 
         userRepository.save(user)
         return user
