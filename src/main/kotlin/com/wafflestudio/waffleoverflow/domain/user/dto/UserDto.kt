@@ -25,7 +25,7 @@ class UserDto {
             email = user.email,
             username = user.username,
             accessToken = user.accessToken,
-            image = user.s3Path,
+            image = user.s3ObjectKey,
             questions = user.questions.map { QuestionDto.ResponseSummary(it) },
             answers = user.answers.map { AnswerDto.ResponseSummary(it) },
             location = user.location,
@@ -48,7 +48,7 @@ class UserDto {
             id = user.id,
             username = user.username,
             location = user.location,
-            image = user.s3Path,
+            image = user.s3ObjectKey,
             questionCount = user.questions.count(),
             answerCount = user.answers.count(),
         )
@@ -62,7 +62,7 @@ class UserDto {
         constructor(user: User) : this(
             id = user.id,
             username = user.username,
-            image = user.s3Path,
+            image = user.s3ObjectKey,
         )
     }
 
