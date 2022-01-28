@@ -44,7 +44,7 @@ class User(
     @field:NotBlank
     var accessToken: String,
 
-    var s3Path: String? = null,
+    var s3ObjectKey: String? = null,
 
     var location: String? = null,
 
