@@ -36,3 +36,12 @@ jobs:
       with:
         name: Package
         path: build/libs
+
+    - name: Upload S3
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_SECRET }}
+      run: |
+        aws s3 cp \
+          --region ap-northeast-2 \
+          ./build/libs/*.jar s3://waffleoverflow-be-bucket
