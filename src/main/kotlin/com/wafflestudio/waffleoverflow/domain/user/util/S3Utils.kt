@@ -62,4 +62,8 @@ class S3Utils {
 
         return amazonS3.getUrl(bucket, dir + fileName).toString()
     }
+
+    fun delete(key: String?) {
+        amazonS3.deleteObject(bucket, key)
+    }
 }
