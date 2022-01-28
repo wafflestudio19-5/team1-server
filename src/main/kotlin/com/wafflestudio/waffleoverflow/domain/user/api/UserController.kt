@@ -111,6 +111,6 @@ class UserController(
     fun deleteAccount(
         @CurrentUser user: User,
     ) {
-        userService.deleteMyAccount(user)
+        userService.deleteAccount(user)
     }
 }

@@ -25,15 +25,10 @@ class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val s3Utils: S3Utils
+    private val s3Utils: S3Utils,
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
-        if (!isEmailValid(signupRequest.email))throw InvalidEmailFormatException()
-        if (!isPasswordValid(signupRequest.password)) throw InvalidPasswordFormatException()
-        if (!checkUsernameLength(signupRequest.username)) throw TooLongUsernameException()
-        if (userRepository.existsUserByUsername(signupRequest.username) ||
-            userRepository.existsUserByEmail(signupRequest.email)
-        ) throw UserAlreadyExistsException()
+        checkSignUpExceptions(signupRequest)
 
         val user: User?
         val email = signupRequest.email
@@ -54,6 +49,7 @@ class UserService(
                 throw BadGrantTypeException()
             }
         }
+
         return userRepository.save(user)
     }
 
@@ -65,7 +61,7 @@ class UserService(
         return userRepository.findByEmail(user.email) ?: throw UserNotFoundException()
     }
 
-    fun deleteMyAccount(user: User) {
+    fun deleteAccount(user: User) {
         var randomName = "user" + (10000000..99999999).random().toString()
         var randomEmail = "$randomName@email.com"
         while (userRepository.existsUserByUsername(randomName) &&
@@ -86,28 +82,6 @@ class UserService(
         user.isDeleted = true
 
         userRepository.save(user)
-    }
-
-    private fun checkUsernameLength(username: String): Boolean {
-        return username.length <= 20
-    }
-
-    private fun isEmailValid(email: String): Boolean {
-        return Pattern.compile(
-            "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]|[\\w-]{2,}))@" +
-                "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?" +
-                "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\." +
-                "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?" +
-                "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|" +
-                "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
-        ).matcher(email).matches()
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        return password.matches(
-            "^(?=.*[a-zA-Z0-9])(?=.*[a-zA-Z!@#\$%^&*])(?=.*[0-9!@#\$%^&*]).{6,15}\$"
-                .toRegex()
-        )
     }
 
     fun editProfileImage(
@@ -145,5 +119,36 @@ class UserService(
         if (githubLink != null) user.githubLink = githubLink
 
         return userRepository.save(user)
+    }
+
+    private fun checkSignUpExceptions(signupRequest: UserDto.SignupRequest) {
+        if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormatException()
+        if (!isPasswordValid(signupRequest.password)) throw InvalidPasswordFormatException()
+        if (!checkUsernameLength(signupRequest.username)) throw TooLongUsernameException()
+        if (userRepository.existsUserByUsername(signupRequest.username) ||
+            userRepository.existsUserByEmail(signupRequest.email)
+        ) throw UserAlreadyExistsException()
+    }
+
+    private fun checkUsernameLength(username: String): Boolean {
+        return username.length <= 20
+    }
+
+    private fun isEmailValid(email: String): Boolean {
+        return Pattern.compile(
+            "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]|[\\w-]{2,}))@" +
+                "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?" +
+                "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\." +
+                "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?" +
+                "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|" +
+                "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
+        ).matcher(email).matches()
+    }
+
+    private fun isPasswordValid(password: String): Boolean {
+        return password.matches(
+            "^(?=.*[a-zA-Z0-9])(?=.*[a-zA-Z!@#\$%^&*])(?=.*[0-9!@#\$%^&*]).{6,15}\$"
+                .toRegex()
+        )
     }
 }
