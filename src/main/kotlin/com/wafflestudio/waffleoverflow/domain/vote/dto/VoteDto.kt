@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern
 class VoteDto {
     data class Request(
         @Pattern(regexp = "(up|down)")
-        val status: String
+        val status: String,
     )
 
     data class Response(
