@@ -26,7 +26,6 @@ class AWSConfiguration {
     fun assetS3Client(
         @Value("\${aws.access-key}") accessKey: String,
         @Value("\${aws.secret-key}") secretKey: String,
-        @Value("\${aws.s3.endpoint}") s3Endpoint: String
     ): AmazonS3 {
         return AmazonS3ClientBuilder.standard()
             .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials(accessKey, secretKey)))
@@ -55,12 +54,13 @@ class S3Utils {
         objMeta.contentLength = bytes.size.toLong()
 
         val byteArrayIs = ByteArrayInputStream(bytes)
+        val key = "$dir/$fileName"
 
         amazonS3.putObject(
-            PutObjectRequest(bucket, dir + fileName, byteArrayIs, objMeta)
+            PutObjectRequest(bucket, key, byteArrayIs, objMeta)
         )
 
-        return amazonS3.getUrl(bucket, dir + fileName).toString()
+        return key
     }
 
     fun delete(key: String?) {
