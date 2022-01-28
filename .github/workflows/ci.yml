@@ -56,4 +56,4 @@ jobs:
       run: |
         aws s3 cp \
           --region ${{ secrets.AWS_REGION }} \
-          ./build/libs/*.jar s3://${{ secrets.AWS_S3_BUCKET }}
+          ./build/libs/*.jar s3://${{ secrets.AWS_S3_BUCKET }}/
