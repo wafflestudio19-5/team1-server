@@ -1,7 +1,7 @@
 # 🧇 WaffleOverFlow Server
 
 ## Tech Stack
-![image](https://user-images.githubusercontent.com/70942197/149767498-facb315b-2432-46e1-b63c-cc817cbc135a.png)
+![waffleoverflow](https://user-images.githubusercontent.com/70942197/151508565-28bc3365-7119-4c72-b0dc-0f7bfd18bd6a.png)
 
 ## Members
 |Leader|Member|Member|
