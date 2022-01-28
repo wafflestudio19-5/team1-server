@@ -3,8 +3,8 @@
 cd ~/waffleoverflow
 
 # update develop branch
-git switch develop
-git pull origin develop
+git switch master
+git pull origin master
 
 # Delete application yaml
 rm -rf src/main/resources/application.yml
