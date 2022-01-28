@@ -18,11 +18,4 @@ jobs:
         host: ${{ secrets.EC2_HOST_IP }}
         username: ec2-user
         script: |
-          cd ~/waffleoverflow
-          git switch master
-          git pull origin master
-          rm -rf src/main/resources/application.yml
-          cp ~/application.yml src/main/resources/application.yml
-          ./gradlew bootJar
-          sudo systemctl restart initapp
-          sudo systemctl restart nginx
+          bash /home/ec2-user/master_deploy.sh
