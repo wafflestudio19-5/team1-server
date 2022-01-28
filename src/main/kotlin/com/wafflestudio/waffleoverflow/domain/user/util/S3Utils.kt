@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.util.UUID
 
 // from https://wave1994.tistory.com/131
 
@@ -47,7 +46,7 @@ class S3Utils {
 
     @Throws(IOException::class)
     fun upload(multipartFile: MultipartFile): String {
-        val fileName = UUID.randomUUID().toString() + "-" + multipartFile.originalFilename
+        val fileName = multipartFile.originalFilename
         val objMeta = ObjectMetadata()
 
         val bytes = IOUtils.toByteArray(multipartFile.inputStream)
