@@ -25,15 +25,11 @@ class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val s3Utils: S3Utils
+    private val s3Utils: S3Utils,
 ) {
     fun signup(signupRequest: UserDto.SignupRequest): User {
-        if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormatException()
-        if (!isPasswordValid(signupRequest.password)) throw InvalidPasswordFormatException()
-        if (!checkUsernameLength(signupRequest.username)) throw TooLongUsernameException()
-        if (userRepository.existsUserByUsername(signupRequest.username) ||
-            userRepository.existsUserByEmail(signupRequest.email)
-        ) throw throw UserAlreadyExistsException()
+        checkSignUpExceptions(signupRequest)
+
         val user: User?
         val email = signupRequest.email
         val username = signupRequest.username
@@ -44,7 +40,7 @@ class UserService(
         when (grantType) {
             // Oauth 영역 추가 예정
             "PASSWORD" -> {
-                if (email == null || signupRequest.password == null || signupRequest.password == "") {
+                if (signupRequest.password == "") {
                     throw UserSignUpBadRequestException()
                 }
                 user = User(email, username, encodedPassword, accessToken = accessToken)
@@ -53,11 +49,8 @@ class UserService(
                 throw BadGrantTypeException()
             }
         }
-        return userRepository.save(user)
-    }
 
-    fun deleteMyAccount(user: User) {
-        userRepository.delete(user)
+        return userRepository.save(user)
     }
 
     fun findUserById(id: Long): User {
@@ -66,6 +59,78 @@ class UserService(
 
     fun loadUserInfo(user: User): User {
         return userRepository.findByEmail(user.email) ?: throw UserNotFoundException()
+    }
+
+    fun deleteAccount(user: User) {
+        var randomName = "user" + (10000000..99999999).random().toString()
+        var randomEmail = "$randomName@email.com"
+        while (userRepository.existsUserByUsername(randomName) &&
+            userRepository.existsUserByEmail(randomEmail)
+        ) {
+            randomName = "user" + (10000000..99999999).random().toString()
+            randomEmail = "$randomName@email.com"
+        }
+
+        user.username = randomName
+        user.email = randomEmail
+        user.s3ObjectKey = null
+        user.location = null
+        user.userTitle = null
+        user.aboutMe = null
+        user.websiteLink = null
+        user.githubLink = null
+        user.isDeleted = true
+
+        userRepository.save(user)
+    }
+
+    fun editProfileImage(
+        user: User,
+        multipartFile: MultipartFile
+    ): User {
+        user.s3ObjectKey?.let {
+            s3Utils.delete(user.s3ObjectKey)
+        }
+
+        user.s3ObjectKey = s3Utils.upload(multipartFile)
+
+        userRepository.save(user)
+        return user
+    }
+
+    fun editUserProfile(
+        user: User,
+        editProfileRequest: UserDto.EditProfileRequest,
+    ): User {
+        val displayName = editProfileRequest.displayName
+        val location = editProfileRequest.location
+        val userTitle = editProfileRequest.userTitle
+        val aboutMe = editProfileRequest.aboutMe
+        val websiteLink = editProfileRequest.websiteLink
+        val githubLink = editProfileRequest.githubLink
+
+        if (!checkUsernameLength(editProfileRequest.displayName))
+            throw TooLongUsernameException()
+        if (userRepository.existsUserByUsername(editProfileRequest.displayName) && (user.username != displayName))
+            throw UserAlreadyExistsException()
+
+        user.username = displayName
+        if (location != null) user.location = location
+        if (userTitle != null) user.userTitle = userTitle
+        if (aboutMe != null) user.aboutMe = aboutMe
+        if (websiteLink != null) user.websiteLink = websiteLink
+        if (githubLink != null) user.githubLink = githubLink
+
+        return userRepository.save(user)
+    }
+
+    private fun checkSignUpExceptions(signupRequest: UserDto.SignupRequest) {
+        if (!isEmailValid(signupRequest.email)) throw InvalidEmailFormatException()
+        if (!isPasswordValid(signupRequest.password)) throw InvalidPasswordFormatException()
+        if (!checkUsernameLength(signupRequest.username)) throw TooLongUsernameException()
+        if (userRepository.existsUserByUsername(signupRequest.username) ||
+            userRepository.existsUserByEmail(signupRequest.email)
+        ) throw UserAlreadyExistsException()
     }
 
     private fun checkUsernameLength(username: String): Boolean {
@@ -88,43 +153,5 @@ class UserService(
             "^(?=.*[a-zA-Z0-9])(?=.*[a-zA-Z!@#\$%^&*])(?=.*[0-9!@#\$%^&*]).{6,15}\$"
                 .toRegex()
         )
-    }
-
-    fun editProfileImage(
-        user: User,
-        multipartFile: MultipartFile
-    ): User {
-        val urlPath = s3Utils.upload(multipartFile)
-
-        user.s3Path = urlPath
-        userRepository.save(user)
-
-        return user
-    }
-
-    fun editUserProfile(
-        user: User,
-        editProfileRequest: UserDto.EditProfileRequest,
-    ): User {
-        val displayName = editProfileRequest.displayName
-        val location = editProfileRequest.location
-        val userTitle = editProfileRequest.userTitle
-        val aboutMe = editProfileRequest.aboutMe
-        val websiteLink = editProfileRequest.websiteLink
-        val githubLink = editProfileRequest.githubLink
-
-        if (!checkUsernameLength(editProfileRequest.displayName))
-            throw TooLongUsernameException()
-        if (userRepository.existsUserByUsername(editProfileRequest.displayName))
-            throw throw UserAlreadyExistsException()
-
-        user.username = displayName
-        if (location != null) user.location = location
-        if (userTitle != null) user.userTitle = userTitle
-        if (aboutMe != null) user.aboutMe = aboutMe
-        if (websiteLink != null) user.websiteLink = websiteLink
-        if (githubLink != null) user.githubLink = githubLink
-
-        return userRepository.save(user)
     }
 }

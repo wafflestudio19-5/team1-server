@@ -8,26 +8,26 @@ import javax.validation.constraints.NotBlank
 class CommentDto {
     data class Response(
         val id: Long,
-        val user: UserDto.ResponseSummary,
+        val user: UserDto.SimpleResponse,
         val body: String,
         val questionId: Long?,
         val answerId: Long?,
         val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime
+        val updatedAt: LocalDateTime,
     ) {
         constructor(comment: Comment) : this(
             comment.id,
-            UserDto.ResponseSummary(comment.user),
+            UserDto.SimpleResponse(comment.user),
             comment.body,
             comment.question?.id,
             comment.answer?.id,
             comment.createdAt!!,
-            comment.updatedAt!!
+            comment.updatedAt!!,
         )
     }
 
     data class Request(
         @NotBlank
-        val body: String
+        val body: String,
     )
 }

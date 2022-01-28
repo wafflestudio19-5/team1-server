@@ -24,4 +24,5 @@ class Vote(
 
     @Column
     var status: VoteStatus,
+
 ) : BaseTimeEntity()

@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank
 class QuestionDto {
     data class Response(
         val id: Long,
-        val user: UserDto.ResponseSummary,
+        val user: UserDto.SimpleResponse,
         val title: String,
         val body: String,
         val vote: Int,
@@ -20,11 +20,11 @@ class QuestionDto {
         val tags: List<TagDto.Response>,
         val answers: List<AnswerDto.Response>,
         val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime
+        val editedAt: LocalDateTime?,
     ) {
         constructor(question: Question) : this(
             question.id,
-            UserDto.ResponseSummary(question.user),
+            UserDto.SimpleResponse(question.user),
             question.title,
             question.body,
             question.votes.count { it.status == VoteStatus.UP } - question.votes.count { it.status == VoteStatus.DOWN },
@@ -32,7 +32,7 @@ class QuestionDto {
             question.questionTags.map { TagDto.Response(it.tag) },
             question.answers.map { AnswerDto.Response(it) },
             question.createdAt!!,
-            question.updatedAt!!
+            question.editedAt,
         )
     }
 
@@ -46,7 +46,7 @@ class QuestionDto {
     data class ResponseSummary(
         val id: Long,
         val title: String,
-        val createdAt: LocalDateTime?
+        val createdAt: LocalDateTime?,
     ) {
         constructor(question: Question) : this(
             id = question.id,

@@ -5,6 +5,7 @@ import com.wafflestudio.waffleoverflow.domain.comment.model.Comment
 import com.wafflestudio.waffleoverflow.domain.model.BaseTimeEntity
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
+import java.time.LocalDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -21,15 +22,16 @@ class Question(
     val user: User,
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    var answers: MutableList<Answer> = mutableListOf(),
+    var answers: MutableSet<Answer> = mutableSetOf(),
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var votes: MutableList<Vote> = mutableListOf(),
 
-    var voteCount: Int = 0,
-
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var comments: MutableList<Comment> = mutableListOf(),
+
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var questionTags: MutableList<QuestionTag> = mutableListOf(),
 
     @field:NotBlank
     var title: String,
@@ -37,6 +39,8 @@ class Question(
     @Column(columnDefinition = "LONGTEXT")
     var body: String,
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var questionTags: MutableList<QuestionTag> = mutableListOf(),
+    var voteCount: Int = 0,
+
+    var editedAt: LocalDateTime? = null,
+
 ) : BaseTimeEntity()

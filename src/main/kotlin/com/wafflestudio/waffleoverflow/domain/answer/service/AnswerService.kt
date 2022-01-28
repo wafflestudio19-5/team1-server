@@ -9,6 +9,7 @@ import com.wafflestudio.waffleoverflow.domain.user.model.User
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 @Transactional
@@ -22,26 +23,30 @@ class AnswerService(
     fun editAnswer(
         requestBody: AnswerDto.Request,
         user: User,
-        answer: Answer
+        answerId: Long,
     ): Answer {
+        val answer = findById(answerId)
         validateUser(user, answer)
         answer.body = requestBody.body
+        answer.editedAt = LocalDateTime.now()
         return answer
     }
 
     fun deleteAnswer(
         user: User,
-        answer: Answer
+        answerId: Long,
     ) {
+        val answer = findById(answerId)
         validateUser(user, answer)
         answerRepository.delete(answer)
     }
 
     private fun validateUser(
         user: User,
-        answer: Answer
+        answer: Answer,
     ) {
-        if (user.id != answer.user.id)
+        if (user.id != answer.user.id) {
             throw UnauthorizedUserException("User $user.id is not the author of answer $answer.id")
+        }
     }
 }

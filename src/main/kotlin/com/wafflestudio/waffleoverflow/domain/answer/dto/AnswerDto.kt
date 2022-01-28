@@ -10,28 +10,28 @@ import javax.validation.constraints.NotEmpty
 class AnswerDto {
     data class Request(
         @NotEmpty
-        val body: String
+        val body: String,
     )
 
     data class Response(
         val id: Long,
-        val user: UserDto.ResponseSummary,
+        val user: UserDto.SimpleResponse,
         val body: String,
         val votes: Int,
         val comments: List<CommentDto.Response>,
         val accepted: Boolean,
         val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime
+        val editedAt: LocalDateTime?,
     ) {
         constructor(answer: Answer) : this(
             answer.id,
-            UserDto.ResponseSummary(answer.user),
+            UserDto.SimpleResponse(answer.user),
             answer.body,
             answer.votes.count { it.status == VoteStatus.UP } - answer.votes.count { it.status == VoteStatus.DOWN },
             answer.comments.map { CommentDto.Response(it) },
             answer.accepted,
             answer.createdAt!!,
-            answer.updatedAt!!
+            answer.editedAt,
         )
     }
 
@@ -39,13 +39,13 @@ class AnswerDto {
         val id: Long,
         val questionTitle: String,
         val questionId: Long,
-        val createdAt: LocalDateTime?
+        val createdAt: LocalDateTime?,
     ) {
         constructor(answer: Answer) : this(
             id = answer.id,
             questionTitle = answer.question.title,
             questionId = answer.question.id,
-            createdAt = answer.createdAt
+            createdAt = answer.createdAt,
         )
     }
 }

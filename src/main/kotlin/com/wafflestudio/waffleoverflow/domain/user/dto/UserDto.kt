@@ -25,7 +25,7 @@ class UserDto {
             email = user.email,
             username = user.username,
             accessToken = user.accessToken,
-            image = user.s3Path,
+            image = user.s3ObjectKey,
             questions = user.questions.map { QuestionDto.ResponseSummary(it) },
             answers = user.answers.map { AnswerDto.ResponseSummary(it) },
             location = user.location,
@@ -36,13 +36,33 @@ class UserDto {
         )
     }
 
-    data class ResponseSummary(
+    data class CardResponse(
         val id: Long,
-        val username: String
+        val username: String,
+        val location: String?,
+        val image: String?,
+        val questionCount: Int,
+        val answerCount: Int,
     ) {
         constructor(user: User) : this(
             id = user.id,
-            username = user.username
+            username = user.username,
+            location = user.location,
+            image = user.s3ObjectKey,
+            questionCount = user.questions.count(),
+            answerCount = user.answers.count(),
+        )
+    }
+
+    data class SimpleResponse(
+        val id: Long,
+        val username: String,
+        val image: String?,
+    ) {
+        constructor(user: User) : this(
+            id = user.id,
+            username = user.username,
+            image = user.s3ObjectKey,
         )
     }
 

@@ -5,6 +5,7 @@ import com.wafflestudio.waffleoverflow.domain.model.BaseTimeEntity
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
+import java.time.LocalDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -25,14 +26,16 @@ class Answer(
     @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var votes: MutableList<Vote> = mutableListOf(),
 
-    var voteCount: Int = 0,
-
     @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var comments: MutableList<Comment> = mutableListOf(),
 
     @Column(columnDefinition = "LONGTEXT")
     var body: String,
 
-    @Column
-    var accepted: Boolean = false
+    var voteCount: Int = 0,
+
+    var accepted: Boolean = false,
+
+    var editedAt: LocalDateTime? = null,
+
 ) : BaseTimeEntity()

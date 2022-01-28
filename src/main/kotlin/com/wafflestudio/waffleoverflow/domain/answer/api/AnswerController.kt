@@ -26,7 +26,7 @@ import javax.validation.Valid
 class AnswerController(
     private val answerService: AnswerService,
     private val commentService: CommentService,
-    private val voteService: VoteService
+    private val voteService: VoteService,
 ) {
     @PutMapping("/{answer_id}/")
     @ResponseStatus(HttpStatus.OK)
@@ -35,9 +35,8 @@ class AnswerController(
         @Valid @RequestBody requestBody: AnswerDto.Request,
         @PathVariable answer_id: Long,
     ): AnswerDto.Response {
-        val answer = answerService.findById(answer_id)
         return AnswerDto.Response(
-            answerService.editAnswer(requestBody, user, answer)
+            answerService.editAnswer(requestBody, user, answer_id)
         )
     }
 
@@ -45,17 +44,17 @@ class AnswerController(
     @ResponseStatus(HttpStatus.OK)
     fun deleteAnswer(
         @CurrentUser user: User,
-        @PathVariable answer_id: Long
+        @PathVariable answer_id: Long,
     ): AnswerDto.Response {
         val answer = answerService.findById(answer_id)
-        answerService.deleteAnswer(user, answer)
+        answerService.deleteAnswer(user, answer_id)
         return AnswerDto.Response(answer)
     }
 
     @GetMapping("/{answer_id}/comment/")
     @ResponseStatus(HttpStatus.OK)
     fun getComments(
-        @PathVariable answer_id: Long
+        @PathVariable answer_id: Long,
     ): ListResponse<CommentDto.Response> {
         return ListResponse(
             answerService.findById(answer_id).comments.map { CommentDto.Response(it) }
@@ -67,7 +66,7 @@ class AnswerController(
     fun addComment(
         @CurrentUser user: User,
         @PathVariable answer_id: Long,
-        @Valid @RequestBody requestBody: CommentDto.Request
+        @Valid @RequestBody requestBody: CommentDto.Request,
     ): CommentDto.Response {
         val answer = answerService.findById(answer_id)
         return CommentDto.Response(
@@ -82,9 +81,8 @@ class AnswerController(
         @PathVariable comment_id: Long,
         @Valid @RequestBody requestBody: CommentDto.Request,
     ): CommentDto.Response {
-        val comment = commentService.findById(comment_id)
         return CommentDto.Response(
-            commentService.editComment(requestBody, comment, user)
+            commentService.editComment(requestBody, comment_id, user)
         )
     }
 
@@ -92,7 +90,7 @@ class AnswerController(
     @ResponseStatus(HttpStatus.OK)
     fun deleteComment(
         @CurrentUser user: User,
-        @PathVariable comment_id: Long
+        @PathVariable comment_id: Long,
     ): CommentDto.Response {
         val comment = commentService.findById(comment_id)
         commentService.deleteComment(comment, user)
@@ -104,9 +102,8 @@ class AnswerController(
     fun addVote(
         @CurrentUser user: User,
         @PathVariable answer_id: Long,
-        @Valid @RequestBody requestBody: VoteDto.Request
+        @Valid @RequestBody requestBody: VoteDto.Request,
     ): VoteDto.Response {
-        val answer = answerService.findById(answer_id)
-        return voteService.changeAnswerVote(requestBody, user, answer)
+        return voteService.changeAnswerVote(requestBody, user, answer_id)
     }
 }

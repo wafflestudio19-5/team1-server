@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank
 class User(
     @Column(unique = true)
     @field:NotBlank
-    val email: String,
+    var email: String,
 
     @field:NotBlank
     var username: String,
@@ -26,13 +26,25 @@ class User(
     @Column
     var password: String? = null,
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [])
+    var questions: MutableSet<Question> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [])
+    var answers: MutableSet<Answer> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
+    var votes: MutableList<Vote> = mutableListOf(),
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
+    var comments: MutableList<Comment> = mutableListOf(),
+
     @JsonIgnore
     val authorities: String = "User",
 
     @field:NotBlank
     var accessToken: String,
 
-    var s3Path: String? = null,
+    var s3ObjectKey: String? = null,
 
     var location: String? = null,
 
@@ -45,15 +57,6 @@ class User(
 
     var githubLink: String? = null,
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
-    var questions: MutableList<Question> = mutableListOf(),
+    var isDeleted: Boolean = false,
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
-    var answers: MutableList<Answer> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
-    var votes: MutableList<Vote> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [])
-    var comments: MutableList<Comment> = mutableListOf(),
 ) : BaseEntity()

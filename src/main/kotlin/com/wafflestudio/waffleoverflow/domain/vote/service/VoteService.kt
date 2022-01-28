@@ -1,7 +1,9 @@
 package com.wafflestudio.waffleoverflow.domain.vote.service
 
 import com.wafflestudio.waffleoverflow.domain.answer.model.Answer
+import com.wafflestudio.waffleoverflow.domain.answer.service.AnswerService
 import com.wafflestudio.waffleoverflow.domain.question.model.Question
+import com.wafflestudio.waffleoverflow.domain.question.service.QuestionService
 import com.wafflestudio.waffleoverflow.domain.user.model.User
 import com.wafflestudio.waffleoverflow.domain.vote.dto.VoteDto
 import com.wafflestudio.waffleoverflow.domain.vote.model.Vote
@@ -14,12 +16,15 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class VoteService(
     private val voteRepository: VoteRepository,
+    private val questionService: QuestionService,
+    private val answerService: AnswerService,
 ) {
     fun changeQuestionVote(
         requestBody: VoteDto.Request,
         user: User,
-        question: Question,
+        questionId: Long,
     ): VoteDto.Response {
+        val question = questionService.findById(questionId)
         if (voteExists(user, question, null)) {
             return updateQuestionVote(requestBody, user, question)
         } else {
@@ -30,27 +35,14 @@ class VoteService(
     fun changeAnswerVote(
         requestBody: VoteDto.Request,
         user: User,
-        answer: Answer,
+        answerId: Long,
     ): VoteDto.Response {
+        val answer = answerService.findById(answerId)
         if (voteExists(user, null, answer)) {
             return updateAnswerVote(requestBody, user, answer)
         } else {
             return addAnswerVote(requestBody, user, answer)
         }
-    }
-
-    private fun voteExists(
-        user: User,
-        question: Question?,
-        answer: Answer?
-    ): Boolean {
-        if (question != null) {
-            return question.votes.any { it.user.id == user.id }
-        }
-        if (answer != null) {
-            return answer.votes.any { it.user.id == user.id }
-        }
-        return false
     }
 
     private fun addQuestionVote(
@@ -78,31 +70,6 @@ class VoteService(
         return VoteDto.Response(vote)
     }
 
-    private fun updateVoteCount(
-        question: Question?,
-        answer: Answer?
-    ) {
-        if (question != null) {
-            question.voteCount = question.votes.count { it.status == VoteStatus.UP } -
-                question.votes.count { it.status == VoteStatus.DOWN }
-        }
-        if (answer != null) {
-            answer.voteCount = answer.votes.count { it.status == VoteStatus.UP } -
-                answer.votes.count { it.status == VoteStatus.DOWN }
-        }
-    }
-
-    private fun getStatus(
-        requestBody: VoteDto.Request
-    ): VoteStatus {
-        val status = when (requestBody.status) {
-            "Up" -> VoteStatus.UP
-            "Down" -> VoteStatus.DOWN
-            else -> VoteStatus.NONE
-        }
-        return status
-    }
-
     private fun updateQuestionVote(
         requestBody: VoteDto.Request,
         user: User,
@@ -121,7 +88,7 @@ class VoteService(
         question: Question?,
         answer: Answer?,
     ): VoteDto.Response {
-        var status = getStatus(requestBody)
+        val status = getStatus(requestBody)
 
         // find the user's vote
         var vote = Vote(user, question, answer, status)
@@ -132,11 +99,49 @@ class VoteService(
             vote = answer.votes.find { it.user.id == user.id }!!
         }
 
-        status = checkNeutralVote(vote, status)
-        vote.status = status
+        vote.status = checkNeutralVote(vote, status)
         updateVoteCount(question, answer)
 
         return VoteDto.Response(vote)
+    }
+
+    private fun voteExists(
+        user: User,
+        question: Question?,
+        answer: Answer?
+    ): Boolean {
+        if (question != null) {
+            return question.votes.any { it.user.id == user.id }
+        }
+        if (answer != null) {
+            return answer.votes.any { it.user.id == user.id }
+        }
+        return false
+    }
+
+    private fun getStatus(
+        requestBody: VoteDto.Request
+    ): VoteStatus {
+        val status = when (requestBody.status) {
+            "Up" -> VoteStatus.UP
+            "Down" -> VoteStatus.DOWN
+            else -> VoteStatus.NONE
+        }
+        return status
+    }
+
+    private fun updateVoteCount(
+        question: Question?,
+        answer: Answer?
+    ) {
+        if (question != null) {
+            question.voteCount = question.votes.count { it.status == VoteStatus.UP } -
+                question.votes.count { it.status == VoteStatus.DOWN }
+        }
+        if (answer != null) {
+            answer.voteCount = answer.votes.count { it.status == VoteStatus.UP } -
+                answer.votes.count { it.status == VoteStatus.DOWN }
+        }
     }
 
     private fun checkNeutralVote(

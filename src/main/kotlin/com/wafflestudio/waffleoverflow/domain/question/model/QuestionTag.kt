@@ -16,4 +16,5 @@ class QuestionTag(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val tag: Tag,
+
 ) : BaseEntity()

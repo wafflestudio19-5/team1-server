@@ -2,8 +2,12 @@ package com.wafflestudio.waffleoverflow.domain.user.api
 
 import com.wafflestudio.waffleoverflow.domain.user.dto.UserDto
 import com.wafflestudio.waffleoverflow.domain.user.model.User
+import com.wafflestudio.waffleoverflow.domain.user.repository.UserRepository
 import com.wafflestudio.waffleoverflow.domain.user.service.UserService
 import com.wafflestudio.waffleoverflow.global.auth.CurrentUser
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -28,12 +32,22 @@ import javax.validation.Valid
 @RequestMapping("/api/user")
 class UserController(
     private val userService: UserService,
+    private val userRepository: UserRepository,
 ) {
+    @GetMapping("/")
+    @ResponseStatus(HttpStatus.OK)
+    fun getUsers(
+        @PageableDefault(size = 36)
+        pageable: Pageable,
+    ): Page<UserDto.CardResponse> {
+        return userRepository.findAllByIsDeletedIsFalse(pageable).map { UserDto.CardResponse(it) }
+    }
+
     @PostMapping("/signup/")
     @ResponseStatus(HttpStatus.OK)
     fun signup(
         @Valid @RequestBody signupRequest: UserDto.SignupRequest,
-        response: HttpServletResponse
+        response: HttpServletResponse,
     ): UserDto.Response {
         val user = userService.signup(signupRequest)
         response.addHeader("Authentication", user.accessToken)
@@ -47,7 +61,17 @@ class UserController(
         response: HttpServletResponse,
     ) {
         val auth: Authentication = SecurityContextHolder.getContext().authentication
-        if (auth != null) SecurityContextLogoutHandler().logout(request, response, auth)
+        SecurityContextLogoutHandler().logout(request, response, auth)
+    }
+
+    @GetMapping("/{user_id}/")
+    @ResponseStatus(HttpStatus.OK)
+    fun findUserById(
+        @PathVariable user_id: Long,
+    ): UserDto.Response {
+        return UserDto.Response(
+            userService.findUserById(user_id)
+        )
     }
 
     @GetMapping("/me/")
@@ -55,17 +79,8 @@ class UserController(
     fun loadUser(
         @CurrentUser user: User,
     ): UserDto.Response {
-        val thisUser = userService.loadUserInfo(user)
-        return UserDto.Response(thisUser)
-    }
-
-    @GetMapping("/{user_id}/")
-    @ResponseStatus(HttpStatus.OK)
-    fun findUserById(
-        @PathVariable user_id: Long
-    ): UserDto.Response {
         return UserDto.Response(
-            userService.findUserById(user_id)
+            userService.loadUserInfo(user)
         )
     }
 
@@ -73,10 +88,11 @@ class UserController(
     @ResponseStatus(HttpStatus.OK)
     fun editProfileImage(
         @CurrentUser user: User,
-        @RequestParam("image") multipartFile: MultipartFile
+        @RequestParam("image") multipartFile: MultipartFile,
     ): UserDto.Response {
-        val thisUser = userService.editProfileImage(user, multipartFile)
-        return UserDto.Response(thisUser)
+        return UserDto.Response(
+            userService.editProfileImage(user, multipartFile)
+        )
     }
 
     @PutMapping("/me/edit/")
@@ -85,8 +101,9 @@ class UserController(
         @CurrentUser user: User,
         @Valid @RequestBody editProfileRequest: UserDto.EditProfileRequest,
     ): UserDto.Response {
-        val editUser = userService.editUserProfile(user, editProfileRequest)
-        return UserDto.Response(editUser)
+        return UserDto.Response(
+            userService.editUserProfile(user, editProfileRequest)
+        )
     }
 
     @DeleteMapping("/me/remove/")
@@ -94,6 +111,6 @@ class UserController(
     fun deleteAccount(
         @CurrentUser user: User,
     ) {
-        userService.deleteMyAccount(user)
+        userService.deleteAccount(user)
     }
 }
