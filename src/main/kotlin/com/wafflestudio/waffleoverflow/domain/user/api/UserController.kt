@@ -40,7 +40,7 @@ class UserController(
         @PageableDefault(size = 36)
         pageable: Pageable,
     ): Page<UserDto.CardResponse> {
-        return userRepository.findAllByDeletedIsFalse(pageable).map { UserDto.CardResponse(it) }
+        return userRepository.findAllByIsDeletedIsFalse(pageable).map { UserDto.CardResponse(it) }
     }
 
     @PostMapping("/signup/")

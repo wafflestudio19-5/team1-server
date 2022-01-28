@@ -9,5 +9,5 @@ interface UserRepository : JpaRepository<User, Long?> {
     fun findByEmail(email: String): User?
     fun existsUserByUsername(name: String): Boolean
     fun existsUserByEmail(email: String): Boolean
-    fun findAllByDeletedIsFalse(pageable: Pageable): Page<User>
+    fun findAllByIsDeletedIsFalse(pageable: Pageable): Page<User>
 }
