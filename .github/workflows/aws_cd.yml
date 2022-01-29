@@ -2,7 +2,7 @@ name: AWS EC2 CD
 
 on:
   push:
-    branches: [master]
+    branches: [develop]
 
 jobs:
   build:
@@ -16,6 +16,7 @@ jobs:
       with:
         key: ${{ secrets.EC2_SSH_KEY }}
         host: ${{ secrets.EC2_HOST_IP }}
+        timeout: 120s
         username: ec2-user
         script: |
           bash /home/ec2-user/master_deploy.sh
