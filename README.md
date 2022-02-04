@@ -32,7 +32,7 @@ bash /scripts/bash/init-db.sh
         ├── kotlin
         │    └── com.wafflestudio.waffleoverflow
         │        ├── domain
-        │        │   ├── USER - controller, repository, service, model
+        │        │   ├── USER - controller, repository, service, model, S3Utils
         │        │   ├── ANSWER - controller, repository, service, model
         │        │   ├── QUESTION - controller, repository, service, model
         │        │   ├── COMMENT - repository, service, model
