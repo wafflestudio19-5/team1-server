@@ -64,7 +64,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
       run: |
         aws deploy create-deployment \
-        --application-name codedeploy-waffleoverflow \
+        --application-name waffleoverflow \
         --deployment-group-name waffleoverflow-deploy-group \
         --file-exists-behavior OVERWRITE \
         --s3-location bucket=waffleoverflow-s3,bundleType=zip,key=waffleoverflow-deploy.zip \
