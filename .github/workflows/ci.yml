@@ -42,6 +42,9 @@ jobs:
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy/
 
+    - name: Copy appspec
+      run: cp appspec.yml ./deploy/
+
     - name: Make zip file
       run: zip -r -qq -j ./waffleoverflow-deploy.zip ./deploy
 
@@ -54,6 +57,18 @@ jobs:
         --region ${{ secrets.AWS_REGION }} \
         --acl private \
         ./waffleoverflow-deploy.zip s3://waffleoverflow-bucket/
+
+    - name: Deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
+      run: |
+        aws deploy create deployment \
+        --application-name codedeploy-waffleoverflow \
+        --deployment-group-name waffleoverflow-deploy-group \
+        --file-exists-behavior OVERWRITE \
+        --s3-location bucket=waffleoverflow-s3,bundleType=zip,key=waffleoverflow-deploy.zip \
+        --region ap-northeast-2
 
     - name: Cleanup Gradle Cache
       run: |
