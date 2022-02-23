@@ -9,14 +9,78 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Deploy Server
-      uses: appleboy/ssh-action@master
-      with:
-        key: ${{ secrets.EC2_SSH_KEY }}
-        host: ${{ secrets.EC2_HOST_IP }}
-        timeout: 120s
-        username: ec2-user
-        script: |
-          bash /home/ec2-user/master_deploy.sh
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: Setup MySQL
+        run: |
+          sudo systemctl start mysql.service
+          mysql -uroot -proot < ./scripts/sql/init-db.sql
+
+      - name: Create application.yml
+        run: |
+          echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Make Directory for deliver to S3
+        run: mkdir deploy
+
+      - name: Copy Jar
+        run: cp ./build/libs/*.jar ./deploy/
+
+      - name: Copy appspec
+        run: cp appspec.yml ./deploy/
+
+      - name: Copy shell files
+        run: cp ./scripts/deploy/* ./deploy/
+
+      - name: Make zip file
+        run: zip -r -qq -j ./waffleoverflow-deploy.zip ./deploy
+
+      - name: Deliver to AWS S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
+        run: |
+          aws s3 cp \
+          --region ${{ secrets.AWS_REGION }} \
+          --acl private \
+          ./waffleoverflow-deploy.zip s3://waffleoverflow-bucket/
+
+      - name: Deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
+        run: |
+          aws deploy create-deployment \
+          --application-name waffleoverflow \
+          --deployment-group-name codedeploy-waffleoverflow \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=waffleoverflow-bucket,bundleType=zip,key=waffleoverflow-deploy.zip \
+          --region ap-northeast-2
+
+
+      - name: Cleanup Gradle Cache
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: build/libs
