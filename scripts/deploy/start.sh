@@ -2,5 +2,5 @@
 
 cp /home/ec2-user/app/deploy/*.jar /home/ec2-user/app/
 
-sudo systemctl start nginx
-sudo systemctl start initapp
+sudo systemctl restart nginx
+sudo systemctl restart initapp
