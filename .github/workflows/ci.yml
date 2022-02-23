@@ -63,7 +63,7 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
       run: |
-        aws deploy create deployment \
+        aws deploy create-deployment \
         --application-name codedeploy-waffleoverflow \
         --deployment-group-name waffleoverflow-deploy-group \
         --file-exists-behavior OVERWRITE \
