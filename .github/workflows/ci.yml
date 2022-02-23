@@ -53,7 +53,7 @@ jobs:
         aws s3 cp \
         --region ${{ secrets.AWS_REGION }} \
         --acl private \
-        ./waffleoverflow-deploy.zip s3://waffleoverflow-s3/
+        ./waffleoverflow-deploy.zip s3://waffleoverflow-bucket/
 
     - name: Cleanup Gradle Cache
       run: |
