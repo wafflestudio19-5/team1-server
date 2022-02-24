@@ -2,7 +2,7 @@ name: AWS EC2 CD
 
 on:
   push:
-    branches: [master]
+    branches: [master, develop]
 
 jobs:
   build:
